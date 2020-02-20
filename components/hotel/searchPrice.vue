@@ -25,7 +25,7 @@
       </el-col>
       <!-- 人数 -->
       <el-col :span="6" >
-        <div @click="flag=!flag"><el-input placeholder="人数未定" suffix-icon="el-icon-user" ></el-input></div>
+        <div @click="flag=!flag"><el-input placeholder="人数未定" suffix-icon="el-icon-user" readonly></el-input></div>
       </el-col>
       <!-- 显示选择多少成人和儿童 -->
       <div class="pepole" v-show="flag">
