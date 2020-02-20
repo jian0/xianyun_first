@@ -9,16 +9,16 @@
             <el-breadcrumb-item>攻略详情</el-breadcrumb-item>
           </el-breadcrumb>
           <!-- 大标题 -->
-          <h1>塞班贵？一定是你的打开方式不对！6000块玩转塞班</h1>
+          <h1>{{detailData.title}}</h1>
           <hr />
           <!-- 文章信息 -->
           <div class="post-info">
-            <span>攻略：2019-05-22 10:57</span>
-            <span>阅读：13843</span>
+            <span>攻略：{{detailData.city.created_at}}</span>
+            <span>阅读：{{detailData.watch}}</span>
           </div>
           <!-- 文章内容 -->
-          <div class="post-content">
-            <p>大家对塞班岛总存在着这样的误解，知道它是美属地盘，就理所当然地觉得这里的花费一定很高，花费高有高的玩法，那如果只有6000块的预算呢？要怎么玩？关于旅行这件事，我们要让钱花得更有道理，收下这份攻略，带你6000块花式玩转塞班。</p>
+          <div class="post-content" v-html="detailData.content">
+            <!-- <p>大家对塞班岛总存在着这样的误解，知道它是美属地盘，就理所当然地觉得这里的花费一定很高，花费高有高的玩法，那如果只有6000块的预算呢？要怎么玩？关于旅行这件事，我们要让钱花得更有道理，收下这份攻略，带你6000块花式玩转塞班。</p>
             <p>
               <img
                 src="https://n3-q.mafengwo.net/s10/M00/E8/E4/wKgBZ1octoCABhgLAAafahORRLs91.jpeg?imageView2%2F2%2Fw%2F1360%2Fq%2F90"
@@ -49,7 +49,7 @@
             <br />
             <p>怎样去塞班？可以转机也可以直飞，转机大多会从韩国转，提前蹲守能买到韩国飞塞班的特价机票，2000以下就能入手，加上国内飞韩国的机票来回塞班得5000+，还没算上在塞班的住宿费用，转机还有中途等待的时间，光花在路途上的时间就比直飞要多上一倍甚至更多，转乘奔波劳累，非联程票还要担心行李托运问题，所以建议大家有直飞还是尽量选择直飞。</p>
             <p>在酒店上，旅途中我们呆在酒店的时间远比在外游玩的时间少，酒店干净整洁基本就能满足我们休息的需求，塞班不是个享受酒店的地方而且还真不能跟国内星级酒店等位比较，所以不建议大家花过多的钱在塞班的酒店体验上。</p>
-            <p>怎样在机票酒店上获得最高性价比的体验？ 直飞塞班的航班一般和酒店一起打包成机票+酒店套餐，价格要比单定机票、酒店要更加便捷实惠，往往3千多就能把机票和酒店一键搞定。</p>
+            <p>怎样在机票酒店上获得最高性价比的体验？ 直飞塞班的航班一般和酒店一起打包成机票+酒店套餐，价格要比单定机票、酒店要更加便捷实惠，往往3千多就能把机票和酒店一键搞定。</p> -->
           </div>
           <!-- 文章操作 -->
           <div class="post-ctrl">
@@ -212,9 +212,10 @@ export default {
     return {
       currentPage: 5,
       textarea: "",
-      dialogImageUrl:'',
-      dialogVisible:false,
-      dynamicTags: ["@地球发动机"]
+      dialogImageUrl: "",
+      dialogVisible: false,
+      dynamicTags: ["@地球发动机"],
+      detailData: []
     };
   },
   methods: {
@@ -228,6 +229,18 @@ export default {
     handleClose(tag) {
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
     }
+  },
+  mounted() {
+    let id = 4;
+    this.$axios({
+      url: "/posts",
+      id: id
+    }).then(res => {
+      console.log(res);
+      this.detailData = res.data.data[0];
+      //   console.log(this.detailData[0].title);
+        console.log(this.detailData.city.created_at);
+    });
   }
 };
 </script>
@@ -245,7 +258,8 @@ export default {
     margin: 20px 0;
   }
   .post-info {
-    float: right;
+    text-align: right;
+    padding: 20px 0;
     span {
       margin-left: 20px;
       color: #999;
