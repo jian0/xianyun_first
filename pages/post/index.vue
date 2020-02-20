@@ -17,7 +17,7 @@
       <el-col :span="17">
         <div class="article">
           <!-- 右侧输入框 -->
-          <PostInput></PostInput>
+          <PostInput @getData='getData'></PostInput>
 
           <!-- 右侧新闻模块 -->
           <PostNews></PostNews>
@@ -52,7 +52,9 @@ export default {
       pageIndex : 1,
       pageSize : 3,
       // 储存分页总数量
-      total : 10
+      total : 10,
+      // 储存文章列表数据
+      articleList: []
     }
   },
   components: {
@@ -67,7 +69,12 @@ export default {
      },
      handleIndexChange(val){
       this.pageIndex = val;
-     }
+     },
+    //  接收文本框传过来的数据
+      getData(data){
+       this.articleList = data
+      this.total = data.length;
+      }
 
   },
   mounted() {}
