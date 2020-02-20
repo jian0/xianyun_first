@@ -59,8 +59,10 @@
                 <p>评论</p>
               </el-col>
               <el-col class="post-item">
-                <i class="el-icon-share icon"></i>
-                <p>分享</p>
+                <div class="post-item" @click="open">
+                  <i class="el-icon-share icon"></i>
+                  <p>分享</p>
+                </div>
               </el-col>
             </el-row>
           </div>
@@ -202,7 +204,7 @@
                 </div>
               </el-row>
             </nuxt-link>
-          </div> -->
+          </div>-->
         </div>
       </el-col>
     </el-row>
@@ -232,6 +234,14 @@ export default {
     // 关闭tag标签
     handleClose(tag) {
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+    },
+    // 点击分享按钮时触发
+    open() {
+      this.$message({
+        showClose: true,
+        message: "警告哦，这是一条警告消息",
+        type: "warning"
+      });
     }
   },
   mounted() {
@@ -241,7 +251,7 @@ export default {
       url: "/posts",
       id: id
     }).then(res => {
-    //   console.log(res);
+      //   console.log(res);
       this.detailData = res.data.data[0];
       //   console.log(this.detailData[0].title);
       // console.log(this.detailData.city.created_at);
@@ -252,7 +262,7 @@ export default {
       url: "/posts/recommend",
       id: id
     }).then(res => {
-    //   console.log(res);
+      //   console.log(res);
       this.asideData = res.data.data;
     });
   }
@@ -398,7 +408,7 @@ export default {
   p {
     margin-bottom: 10px;
   }
-  /deep/.recommend-item .el-row--flex{
+  /deep/.recommend-item .el-row--flex {
     height: 80px;
   }
   .el-row--flex.is-justify-space-between {
