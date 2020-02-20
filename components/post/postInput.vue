@@ -5,9 +5,9 @@
 
     <span class="referr">
       推荐 &nbsp;
-      <nuxt-link to="#">广州</nuxt-link>
-      <nuxt-link to="#">上海</nuxt-link>
-      <nuxt-link to="#">北京</nuxt-link>
+        <i v-for="(item,index) in goodCities" :key="index" @click='handleCity(item)'>
+          {{item.text}}
+        </i>
     </span>
   </div>
 </template>
@@ -21,10 +21,27 @@ export default {
       // 储存城市id
       cityId: 0,
       // 储存文章数据列表
-      textList: []
+      textList: [],
+    //  储存快速查询
+       goodCities : [
+         {
+           text : '广州',
+           id: 197
+         },
+          {
+           text : '北京',
+           id: 1
+         },
+          {
+           text : '上海',
+           id: 73
+         }
+       ]
     };
   },
-  mounted() {},
+  mounted() {
+    
+  },
   methods: {
     // 输入框change事件搜索文章列表
     handleEnter() {
@@ -37,17 +54,26 @@ export default {
       }).then(res => {
         // console.log(res);
         this.cityId = res.data.data[0].id;
-        // console.log(this.cityId)
+        //  console.log(this.cityId)
       });
 
        setTimeout(()=>{
           this.$store.dispatch("post/getTextList", this.cityId).then(res => {
-        //  console.log(res)
         this.textList = res.data.data;
         this.$message.success("获取城市文章列表完成");
         this.$emit("getData", this.textList);
       });
        },300)
+    },
+    // 点击快捷查询
+    handleCity(item){
+      this.cityId = item.id;
+      this.$store.dispatch("post/getTextList", this.cityId).then(res => {
+          console.log(res)
+        this.textList = res.data.data;
+        this.$message.success("获取城市文章列表完成");
+        this.$emit("getData", this.textList);
+         });
     }
   }
 };
@@ -73,6 +99,10 @@ export default {
   margin: 10px 0 0 0;
   color: #666;
   font-size: 12px;
+  i:hover{
+    color: orange;
+    cursor: pointer;
+  }
 }
 .search {
   position: absolute;
