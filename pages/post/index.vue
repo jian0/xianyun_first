@@ -16,8 +16,8 @@
       <!-- 右侧输入框 -->
      <PostInput></PostInput>
      
-
-
+      <!-- 右侧新闻模块 -->
+      <PostNews></PostNews>
     </div></el-col>
   
     </el-row>
@@ -30,9 +30,10 @@
 <script>
 import PostMenu from '@/components/post/postMenu'
 import PostInput from '@/components/post/postInput'
+import PostNews from '@/components/post/postNews'
 export default {
   components: {
-   PostMenu,PostInput
+   PostMenu,PostInput,PostNews
   },
   mounted(){
    
@@ -64,7 +65,7 @@ export default {
 }
 // 右侧布局
 .article {
-  height: 500px;
+  height: 1000px;
   width: 100%;
 }
 }

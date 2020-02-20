@@ -41,7 +41,7 @@ export default {
     // 推荐
     .referr{
       display: inline-block;
-       margin: 10px 0;
+        margin: 10px 0 0 0;
       color: #666;
       font-size: 12px;
     }
