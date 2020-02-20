@@ -11,9 +11,9 @@
           <!-- 大标题 -->
           <h1>{{detailData.title}}</h1>
           <hr />
-          <!-- 文章信息 -->
+          <!-- 文章信息   {{detailData.city.created_at}}-->
           <div class="post-info">
-            <span>攻略：{{detailData.city.created_at}}</span>
+            <span>攻略：2019-05-22 10:57</span>
             <span>阅读：{{detailData.watch}}</span>
           </div>
           <!-- 文章内容 -->
@@ -49,7 +49,7 @@
             <br />
             <p>怎样去塞班？可以转机也可以直飞，转机大多会从韩国转，提前蹲守能买到韩国飞塞班的特价机票，2000以下就能入手，加上国内飞韩国的机票来回塞班得5000+，还没算上在塞班的住宿费用，转机还有中途等待的时间，光花在路途上的时间就比直飞要多上一倍甚至更多，转乘奔波劳累，非联程票还要担心行李托运问题，所以建议大家有直飞还是尽量选择直飞。</p>
             <p>在酒店上，旅途中我们呆在酒店的时间远比在外游玩的时间少，酒店干净整洁基本就能满足我们休息的需求，塞班不是个享受酒店的地方而且还真不能跟国内星级酒店等位比较，所以不建议大家花过多的钱在塞班的酒店体验上。</p>
-            <p>怎样在机票酒店上获得最高性价比的体验？ 直飞塞班的航班一般和酒店一起打包成机票+酒店套餐，价格要比单定机票、酒店要更加便捷实惠，往往3千多就能把机票和酒店一键搞定。</p> -->
+            <p>怎样在机票酒店上获得最高性价比的体验？ 直飞塞班的航班一般和酒店一起打包成机票+酒店套餐，价格要比单定机票、酒店要更加便捷实惠，往往3千多就能把机票和酒店一键搞定。</p>-->
           </div>
           <!-- 文章操作 -->
           <div class="post-ctrl">
@@ -149,7 +149,27 @@
       <el-col class="aside">
         <div class="grid-content bg-purple">
           <h4 class="aside-title">相关攻略</h4>
-          <div class="recommend-list">
+          <div class="recommend-list" v-for="(item,index) in asideData" :key="index">
+            <nuxt-link to="#" class="recommend-item">
+              <el-row type="flex">
+                <el-row
+                  type="flex"
+                  class="post-img"
+                  v-for="(img,imgindex) in asideData.images"
+                  :key="imgindex"
+                >
+                  <img :src="img" alt />
+                </el-row>
+
+                <div class="post-text">
+                  {{item.title}}
+                  <p>2020-02-20 11:15 阅读 1</p>
+                </div>
+              </el-row>
+            </nuxt-link>
+          </div>
+
+          <!-- <div class="recommend-list">
             <nuxt-link to="#" class="recommend-item">
               <el-row type="flex">
                 <el-row type="flex" class="post-img">
@@ -182,24 +202,7 @@
                 </div>
               </el-row>
             </nuxt-link>
-          </div>
-          <div class="recommend-list">
-            <nuxt-link to="#" class="recommend-item">
-              <el-row type="flex">
-                <el-row type="flex" class="post-img">
-                  <img
-                    src="http://157.122.54.189:9095/uploads/fd4f2f916cf247f7b5221052eeb9c159.jpg"
-                    alt
-                  />
-                </el-row>
-
-                <div class="post-text">
-                  奇奇怪怪
-                  <p>2020-02-20 11:15 阅读 1</p>
-                </div>
-              </el-row>
-            </nuxt-link>
-          </div>
+          </div> -->
         </div>
       </el-col>
     </el-row>
@@ -215,7 +218,8 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       dynamicTags: ["@地球发动机"],
-      detailData: []
+      detailData: [],
+      asideData: []
     };
   },
   methods: {
@@ -232,14 +236,24 @@ export default {
   },
   mounted() {
     let id = 4;
+    // 获取文章详情信息
     this.$axios({
       url: "/posts",
       id: id
     }).then(res => {
-      console.log(res);
+    //   console.log(res);
       this.detailData = res.data.data[0];
       //   console.log(this.detailData[0].title);
-        console.log(this.detailData.city.created_at);
+      // console.log(this.detailData.city.created_at);
+    });
+
+    // 获取侧边栏详情
+    this.$axios({
+      url: "/posts/recommend",
+      id: id
+    }).then(res => {
+    //   console.log(res);
+      this.asideData = res.data.data;
     });
   }
 };
@@ -383,6 +397,9 @@ export default {
   }
   p {
     margin-bottom: 10px;
+  }
+  /deep/.recommend-item .el-row--flex{
+    height: 80px;
   }
   .el-row--flex.is-justify-space-between {
     margin-bottom: 20px;
