@@ -13,7 +13,11 @@
     </div></el-col>
       <!-- 右侧文章列表 -->
    <el-col :span="17"><div class="article">
-       
+      <!-- 右侧输入框 -->
+     <PostInput></PostInput>
+     
+
+
     </div></el-col>
   
     </el-row>
@@ -25,9 +29,10 @@
 
 <script>
 import PostMenu from '@/components/post/postMenu'
+import PostInput from '@/components/post/postInput'
 export default {
   components: {
-   PostMenu
+   PostMenu,PostInput
   },
   mounted(){
    
@@ -59,7 +64,6 @@ export default {
 }
 // 右侧布局
 .article {
-  border: 1px solid black;
   height: 500px;
   width: 100%;
 }

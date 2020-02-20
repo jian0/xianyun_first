@@ -1,7 +1,7 @@
 <template>
   <div class="menu">
      <div v-for="(item,index) in menuList" :key="index">
-      <p class="left">{{item.type}} <i class="el-icon-arrow-right"></i></p>
+      <p class="left" >{{item.type}} <i class="el-icon-arrow-right"></i></p>
       <!-- <div v-for='(value,index1) in item.children' :key="index1" class="show">
          <p ><i>{{index1 + 1}}</i><span>{{value.city}}</span> {{value.desc}}</p>
       </div> -->
@@ -28,6 +28,16 @@ export default {
         this.menuList = res.data.data
         // console.log(this.menuList)
       })
+  },
+  methods : {
+      handle(index){
+          let show = document.querySelector('.show');
+          show.style.display = 'block';
+      },
+      handleHide(){
+          let show = document.querySelector('.show');
+          show.style.display = 'none';
+      }
   }
 }
 </script>
@@ -48,6 +58,7 @@ export default {
        cursor: pointer;
        &:hover {
          color: orange;
+         border-right: none;
        }
        >i {
          margin-top: 10px;
@@ -55,6 +66,8 @@ export default {
      }
      }
      .show {
+     display: none;
+     background-color: #ccc;
      width: 300px;
      height: 200px;
      position: absolute;
