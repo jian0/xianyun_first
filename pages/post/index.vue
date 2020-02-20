@@ -65,7 +65,6 @@ export default {
 }
 // 右侧布局
 .article {
-  height: 1000px;
   width: 100%;
 }
 }

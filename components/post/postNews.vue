@@ -185,6 +185,8 @@ export default {};
 }
 .yi {
     margin-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
     .text {
     h3 {
         font-weight: normal;
