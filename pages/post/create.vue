@@ -33,7 +33,7 @@
 
         <!-- 发布按钮 -->
         <div class="btn">
-          <el-button type="primary">发布</el-button>
+          <el-button type="primary" @click="handleSubmit">发布</el-button>
           <i>或者</i>
           <span>保存到草稿</span>
         </div>
@@ -43,7 +43,7 @@
         <div class="drafts">
           <p>草稿箱(1)</p>
           <i class="el-icon-edit" @click="handleEmpty"></i>
-          <span class="time">2019-10-20</span>
+          <span class="time">2020-2-22</span>
         </div>
       </el-col>
     </el-row>
@@ -59,7 +59,7 @@ export default {
       //发布文章参数
       form: {
         title: "",
-        city: '',
+        city: "",
         content: ""
       },
       // 建议输入的城市
@@ -93,19 +93,39 @@ export default {
     // 建议输入框点击
     handleSelect(data) {
       this.form.city = data.id;
-       console.log(this.form.city)
+      console.log(this.form.city);
     },
     // 建议输入框失焦点触发
     handleBlur() {
+      if (this.cityName === "" || this.cityDataList.length === 0) return;
       this.form.city = this.cityDataList[0].id;
       this.cityName = this.cityDataList[0].value;
-      console.log(this.form.city)
+      console.log(this.form.city);
     },
     // 清空操作
     handleEmpty() {
       this.form.title = "";
       this.form.content = "";
       this.cityName = "";
+    },
+    // 点击发布
+    handleSubmit() {
+        // 判断标题和内容不能为空
+      if (this.form.title === "" || this.form.content === '') {
+        this.$alert("注意，标题或者内容不能为空！", "温馨提示", {
+          confirmButtonText: "确定",
+           type : 'warning'
+        });
+        return;
+      }
+    //判断城市
+      if(this.cityName === '' || this.form.city === ''){
+          this.$alert("注意，城市名称有误！", "温馨提示", {
+          confirmButtonText: "确定",
+           type : 'error'
+        });
+        return;
+      }
     }
   }
 };
