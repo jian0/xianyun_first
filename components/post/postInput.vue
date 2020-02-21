@@ -1,11 +1,11 @@
 <template>
   <div class="input">
-    <el-input placeholder="请输入想去的地方，比如：'广州'" v-model="input" @change="handleEnter"></el-input>
+    <el-input placeholder="请输入想去的地方，比如：'广州'" v-model="input"  @change="handleEnter"></el-input>
     <i class="el-icon-search search"></i>
 
     <span class="referr">
       推荐 &nbsp;
-        <i v-for="(item,index) in goodCities" :key="index" @click='handleCity(item)'>
+        <i v-for="(item,index) in goodCities" :key="index" @click="handleClick(item)">
           {{item.text}}
         </i>
     </span>
@@ -52,28 +52,17 @@ export default {
           name: this.input
         }
       }).then(res => {
-        // console.log(res);
+        // 将数据框的城市id存起来
         this.cityId = res.data.data[0].id;
-        //  console.log(this.cityId)
+        // 将城市id传给父元素
+        this.$emit('getCityId',this.cityId);
       });
-
-       setTimeout(()=>{
-          this.$store.dispatch("post/getTextList", this.cityId).then(res => {
-        this.textList = res.data.data;
-        this.$message.success("获取城市文章列表完成");
-        this.$emit("getData", this.textList);
-      });
-       },300)
     },
-    // 点击快捷查询
-    handleCity(item){
-      this.cityId = item.id;
-      this.$store.dispatch("post/getTextList", this.cityId).then(res => {
-          console.log(res)
-        this.textList = res.data.data;
-        this.$message.success("获取城市文章列表完成");
-        this.$emit("getData", this.textList);
-         });
+    // 点击快捷方式查询
+    handleClick(item){
+    // console.log(item.id)
+    this.cityId = item.id;
+    this.$emit('getCityId',this.cityId);
     }
   }
 };
@@ -94,12 +83,14 @@ export default {
   height: 40px;
 }
 // 推荐
-.referr {
+/deep/.referr {
   display: inline-block;
   margin: 10px 0 0 0;
   color: #666;
   font-size: 12px;
-  i:hover{
+  /deep/i:hover{
+    position: relative;
+    z-index: 99999;
     color: orange;
     cursor: pointer;
   }

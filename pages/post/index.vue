@@ -17,7 +17,7 @@
       <el-col :span="17">
         <div class="article">
           <!-- 右侧输入框 -->
-          <PostInput @getData='getData'></PostInput>
+          <PostInput @getCityId="getCityId"></PostInput>
 
           <!-- 右侧新闻模块 -->
           <PostNews></PostNews>
@@ -26,9 +26,9 @@
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleIndexChange"
-            :current-page="pageIndex"
+            :current-page="start/limit + 1"
             :page-sizes="[3, 5, 8, 10]"
-            :page-size="pageSize"
+            :page-size="limit"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total"
           ></el-pagination>
@@ -46,38 +46,81 @@ import PostInput from "@/components/post/postInput";
 // 右侧新闻列表组件
 import PostNews from "@/components/post/postNews";
 export default {
-  data () {
+  data() {
     return {
       // 储存分页的当前页面和每页显示页数
-      pageIndex : 1,
-      pageSize : 3,
+      // 从第几条开始拿
+      start: 0,
+      // 拿多少条
+      limit: 3,
       // 储存分页总数量
-      total : 10,
+      total: 10,
+      // 储存城市id
+      getId: 1,
       // 储存文章列表数据
       articleList: []
-    }
+    };
   },
   components: {
     PostMenu,
     PostInput,
     PostNews
   },
-  methods :{
+  methods: {
+    // 获得城市id
+    getCityId(id) {
+      this.getId = id;
+      // console.log(this.getId);
+      this.init();
+    },
     // 每页显示多少条
-     handleSizeChange(val){
-       this.pageSize = val;
-     },
-     handleIndexChange(val){
-      this.pageIndex = val;
-     },
-    //  接收文本框传过来的数据
-      getData(data){
-       this.articleList = data
-      this.total = data.length;
-      }
+    handleSizeChange(val) {
+      this.limit = val;
+       this.$router.replace({
+        url: this.$route.path,
+        query: {
+          start: this.start,
+          limit: this.limit
+        }
+      });
+      this.init();
+    },
+    //  当前在第几页
+    handleIndexChange(val) {
+      this.start = this.limit * (val - 1);
 
+      //更换路由(防止退回来页面更新为第一页)
+      this.$router.replace({
+        url: this.$route.path,
+        query: {
+          start: this.start,
+          limit: this.limit
+        }
+      });
+      this.init();
+
+      // console.log(this.start)
+    },
+    // 封装获取文章列表请求
+    init() {
+      this.$axios({
+        url: "/posts",
+        params: {
+          _start: this.start,
+          _limit: this.limit,
+          city: this.getId
+        }
+      }).then(res => {
+        //获取文章数据
+        this.articleList = res.data.data;
+        console.log(this.articleList);
+        this.total = res.data.total;
+      });
+    }
   },
-  mounted() {}
+  mounted() {
+    this.init();
+  }
 };
 </script>
 

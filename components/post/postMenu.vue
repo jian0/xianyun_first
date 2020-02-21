@@ -1,11 +1,11 @@
 <template>
-  <div class="main" @mouseleave="handleOut">
+  <div class="cent" @mouseleave="handleOut">
     <!-- 左侧菜单栏 -->
      <div  class="menu">
       <p class="left" v-for="(item,index) in menuList" :key="index" @mouseenter="handleEnter(index)">{{item.type}} <i class="el-icon-arrow-right" ></i></p>
      </div>
     <!-- 右侧详情展示 -->
-    <div class="right" v-if="current !== false" >
+    <div class="right" v-if ="current !== false" >
      <ul>
        <li v-for="(value,index) in menuList[current].children" :key="index">
          <span class="num">{{index + 1}}</span>
@@ -49,11 +49,10 @@ export default {
 </script>
 
 <style scoped lang='less'>
- .main {
+ .cent {
     margin: 0;
     padding: 0;
-     position: relative;
-    // width: 100%;
+   position: relative;
     .menu {
     border-bottom: 1px solid #ccc;
     width: 250px;
@@ -85,7 +84,7 @@ export default {
      position: absolute;
      z-index: 9;
      top: 0;
-     left : 249.66px;
+     left : 249.55px;
      li {
          height: 40px;
          line-height: 40px;
