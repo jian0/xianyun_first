@@ -35,24 +35,15 @@
             <el-col :span="21">
               <el-row type="flex" justify="space-between">
                 <div class="cheap">
-                  <i class="iconfont iconhuangguan yellow"></i>
-                  <i class="iconfont iconhuangguan yellow"></i>
-                  <i class="iconfont iconhuangguan yellow"></i>
+                  <i class="iconfont iconhuangguan yellow" v-for="e in 3" :key="e"></i>
                   ¥332
                 </div>
                 <div class="middle">
-                  <i class="iconfont iconhuangguan yellow"></i>
-                  <i class="iconfont iconhuangguan yellow"></i>
-                  <i class="iconfont iconhuangguan yellow"></i>
-                  <i class="iconfont iconhuangguan yellow"></i>
+                  <i class="iconfont iconhuangguan yellow" v-for="e in 4" :key="e"></i>
                   ¥521
                 </div>
                 <div class="expensive">
-                  <i class="iconfont iconhuangguan yellow"></i>
-                  <i class="iconfont iconhuangguan yellow"></i>
-                  <i class="iconfont iconhuangguan yellow"></i>
-                  <i class="iconfont iconhuangguan yellow"></i>
-                  <i class="iconfont iconhuangguan yellow"></i>
+                  <i class="iconfont iconhuangguan yellow" v-for="e in 5" :key="e"></i>
                   ¥768
                 </div>
               </el-row>

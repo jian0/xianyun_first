@@ -13,7 +13,7 @@
       </div>
 
       <!-- 搜索价格-->
-      <SearchPrice />
+      <SearchPrice :citydetail='citydetail'/>
 
       <!-- 地方和地图 -->
       <AreaMap />
@@ -35,7 +35,10 @@ import HotelShow from "@/components/hotel/hotelShow";
 export default {
   data() {
     return {
-      hotelList: []
+      hotelList: [],
+      citydetail:{
+        scenics:[],
+      }
     };
   },
   components: {
@@ -64,6 +67,7 @@ export default {
         }).then(res => {
           // console.log(res);
           let { id } = res.data.data[0];
+          this.citydetail=res.data.data[0];
           this.$axios({
             url: "/hotels",
             params: { city: id }
