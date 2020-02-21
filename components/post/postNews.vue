@@ -8,7 +8,7 @@
             <h2 class="title">推荐攻略</h2>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" class="button">
+            <el-button type="primary" class="button" @click="$router.push('/post/create')">
               <i class="el-icon-edit"></i>写游记
             </el-button>
           </el-col>
@@ -18,8 +18,8 @@
         <!-- 新闻信息 -->
         <!-- 三张图的展示 -->
         <div class="san" v-if="item.images.length >= 3" >
-          <h3 class="item">
-            <nuxt-link to="#">{{item.title}}</nuxt-link>
+          <h3 class="item" @click="jumpDetails(item)">
+            <nuxt-link to="#" >{{item.title}}</nuxt-link>
           </h3>
           <p
             class="comment"
@@ -66,7 +66,7 @@
             </el-col>
             <el-col :span="16">
               <div class="text">
-                <h3>
+                <h3 @click="jumpDetails(item)">
                   <nuxt-link to="#">{{item.title}}</nuxt-link>
                 </h3>
                 <p>{{item.summary}}</p>
@@ -92,7 +92,7 @@
         </div>
         <!-- 无图的展示 -->
           <div class="noImg" v-if='item.images.length === 0'>
-            <div class="title">{{item.title}}</div>
+            <div class="title" @click="jumpDetails(item)">{{item.title}}</div>
             <div class="concent">{{item.summary}}</div>
              <!-- 底部表示展示 -->
              <div class="foot">
@@ -122,9 +122,18 @@
 <script>
 export default {
   props : ['data'],
-  mounted(){
-    
-  }
+   methods: {
+     jumpDetails(data){
+       console.log(data)
+        this.$router.push( {
+           path: "/post/detail",
+           query : {
+             id : data.id
+           }
+        })
+        this.$message.success('获取文章详情成功！')
+     }
+   }
 };
 </script>
 
