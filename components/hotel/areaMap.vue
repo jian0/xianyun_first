@@ -71,7 +71,13 @@
 
 <script>
 export default {
+  data() {
+    return {
+      cityName: ""
+    };
+  },
   mounted() {
+    let _this = this;
     var url =
       "https://webapi.amap.com/maps?v=1.4.15&key=6fbcfb88e7e1381d320ef0bfe2a3c49b&callback=onLoad";
     var jsapi = document.createElement("script");
@@ -83,10 +89,10 @@ export default {
         resizeEnable: true
       });
 
-      AMap.plugin("AMap.Geolocation", function() {
+      AMap.plugin("AMap.Geolocation", () => {
         var geolocation = new AMap.Geolocation({
           // 是否使用高精度定位，默认：true
-          enableHighAccuracy: true,
+          // enableHighAccuracy: true,
           // 设置定位超时时间，默认：无穷大
           timeout: 10000,
           // 定位按钮的停靠位置的偏移量，默认：Pixel(10, 20)
@@ -102,8 +108,37 @@ export default {
         AMap.event.addListener(geolocation, "error", onError);
 
         function onComplete(data) {
+          //实现跳转到定位城市的路径
+          _this.cityName = data.addressComponent.city;
+          _this.$alert("定位成功 : " + _this.cityName, "提示", {
+            confirmButtonText: "确定",
+            type: "success"
+          });
+          _this.$router.push({
+            path: "/hotel",
+            query: { cityName: _this.cityName }
+          });
+          //模糊定位
+          // AMap.plugin("AMap.CitySearch", function() {
+          //   var citySearch = new AMap.CitySearch();
+          //   citySearch.getLocalCity(function(status, result) {
+          //     if (status === "complete" && result.info === "OK") {
+          //       // 查询成功，result即为当前所在城市信息
+          //       // console.log(result)
+          //       _this.cityName = result.city;
+          //       _this.$alert("定位成功 : " + _this.cityName, "提示", {
+          //         confirmButtonText: "确定",
+          //         type: "success"
+          //       });
+          //       _this.$router.push({
+          //         path: "/hotel",
+          //         query: { cityName: _this.cityName }
+          //       });
+          //     }
+          //   });
+          // });
+
           // data是具体的定位信息
-        //   console.log(data);
           var marker = new AMap.Marker({
             position: new AMap.LngLat(data.position.lng, data.position.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
             title: data.formattedAddress
@@ -118,7 +153,6 @@ export default {
           map.add(marker);
           // map.remove(marker)
         }
-
         function onError(data) {
           // 定位出错
           console.log(data);
@@ -163,8 +197,8 @@ export default {
 .yellow {
   color: #ff9900;
 }
-#container{
-    width: 100%;
-    height: 100%;
+#container {
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -3,14 +3,17 @@
     <div class="main">
       <!-- destoryed时候要把数据清空掉 -->
       <!-- 面包屑 -->
-      <el-breadcrumb separator-class="el-icon-loading">
-        <el-breadcrumb-item>酒店</el-breadcrumb-item>
-        <el-breadcrumb-item>广州市酒店预订</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div>
+        <el-breadcrumb separator-class="el-icon-loading">
+          <el-breadcrumb-item>酒店</el-breadcrumb-item>
+          <el-breadcrumb-item
+            >{{ $route.query.cityName || "" }}酒店预订</el-breadcrumb-item
+          >
+        </el-breadcrumb>
+      </div>
 
       <!-- 搜索价格-->
-       <SearchPrice />
-      
+      <SearchPrice />
 
       <!-- 地方和地图 -->
       <AreaMap />
@@ -20,22 +23,47 @@
 
       <!-- 酒店展示 -->
       <HotelShow />
-
-      
     </div>
   </div>
 </template>
 
 <script>
-import SearchPrice from "@/components/hotel/searchPrice"
-import AreaMap from "@/components/hotel/areaMap"
-import HotelType from "@/components/hotel/hotelType"
-import HotelShow from '@/components/hotel/hotelShow'
+import SearchPrice from "@/components/hotel/searchPrice";
+import AreaMap from "@/components/hotel/areaMap";
+import HotelType from "@/components/hotel/hotelType";
+import HotelShow from "@/components/hotel/hotelShow";
 export default {
-components:{
-SearchPrice,AreaMap,HotelType,HotelShow
-}
- 
+  data() {
+      return {
+        hotelList: []
+      };
+    },
+  components: {
+    SearchPrice,
+    AreaMap,
+    HotelType,
+    HotelShow
+  },
+  mounted() {
+    // console.log(this.$route.query)
+    if (this.$route.query) {
+      this.$axios({
+        url: "/cities",
+        params: { name: this.$route.query.cityName }
+      }).then(res => {
+        // console.log(res);
+        let { id } = res.data.data[0];
+        this.$axios({
+          url: "/hotels",
+          params: { city: id }
+        }).then(res => {
+          // console.log(res)
+          this.hotelList= res.data.data;
+        });
+        // console.log(id)
+      });
+    }
+  }
 };
 </script>
 
@@ -47,10 +75,8 @@ SearchPrice,AreaMap,HotelType,HotelShow
   .el-breadcrumb {
     margin: 25px 0;
   }
- 
 }
 /deep/.el-icon-user {
   font-size: 20px;
 }
-
 </style>
