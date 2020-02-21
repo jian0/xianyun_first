@@ -6,9 +6,11 @@
       <!-- 远程搜索（地址） -->
       <el-col :span="5">
         <el-autocomplete
+          v-model="searcharea"
           :fetch-suggestions="querySearchAsync"
           placeholder="请输入内容"
           @select="handleSelect"
+          @blur='selectarea'
         ></el-autocomplete
       ></el-col>
       <el-col :span="9">
@@ -24,8 +26,14 @@
         </el-date-picker>
       </el-col>
       <!-- 人数 -->
-      <el-col :span="6" >
-        <div @click="flag=!flag"><el-input placeholder="人数未定" suffix-icon="el-icon-user" readonly></el-input></div>
+      <el-col :span="6">
+        <div @click="flag = !flag">
+          <el-input
+            placeholder="人数未定"
+            suffix-icon="el-icon-user"
+            readonly
+          ></el-input>
+        </div>
       </el-col>
       <!-- 显示选择多少成人和儿童 -->
       <div class="pepole" v-show="flag">
@@ -71,16 +79,49 @@
 export default {
   data() {
     return {
-        flag:false,
+      searcharea: "",
+      //searchareaList为了方便判断搜索时候是否为空
+      searchareaList: [],
+      flag: false
     };
   },
+  mounted () {
+    this.searcharea=this.$route.query.cityName;
+  },
   methods: {
-    methods: {
-      querySearchAsync(value, cb) {
-        // cb（[{内部一定要有value属性才能展示}]）
-      },
-      // 远程搜索选择后做什么
-      handleSelect() {}
+    querySearchAsync(value, cb) {
+      // cb（[{内部一定要有value属性才能展示}]）
+      if (!value) {
+        cb([]);
+        return;
+      }
+      this.$axios({
+        url:'/cities',
+        params:{
+          name:this.searcharea,
+        }
+      }).then(res=>{
+        // console.log(res);
+        let searchareaList = res.data.data;
+        searchareaList.forEach(e=>{
+          e.value= e.name;
+        })
+        this.searchareaList= searchareaList;
+        cb(searchareaList)
+      })
+    },
+    // 远程搜索选择后做什么
+    handleSelect(value) {
+      // console.log(value);
+      //仅仅是页面路径改变了，但是组件还是复用了
+      this.$router.push({path:'/hotel',query:{cityName:value.name}})
+    },
+    //默认选择第一个
+    selectarea(){
+      if(this.searcharea && this.searchareaList) {
+        this.$router.push({path:'/hotel',query:{cityName:this.searchareaList[0].name}});
+        this.searcharea = this.searchareaList[0].name;
+      }
     }
   }
 };

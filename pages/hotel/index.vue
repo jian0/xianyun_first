@@ -34,10 +34,10 @@ import HotelType from "@/components/hotel/hotelType";
 import HotelShow from "@/components/hotel/hotelShow";
 export default {
   data() {
-      return {
-        hotelList: []
-      };
-    },
+    return {
+      hotelList: []
+    };
+  },
   components: {
     SearchPrice,
     AreaMap,
@@ -46,22 +46,34 @@ export default {
   },
   mounted() {
     // console.log(this.$route.query)
-    if (this.$route.query) {
-      this.$axios({
-        url: "/cities",
-        params: { name: this.$route.query.cityName }
-      }).then(res => {
-        // console.log(res);
-        let { id } = res.data.data[0];
+    //第一次进入这个路径时候加载的数据
+    this.init();
+  },
+  watch: {
+    $route(){
+      //路径参数变化时候也要获取到相应数据
+      this.init();
+    }
+  },
+  methods: {
+    init() {
+      if (this.$route.query) {
         this.$axios({
-          url: "/hotels",
-          params: { city: id }
+          url: "/cities",
+          params: { name: this.$route.query.cityName }
         }).then(res => {
-          // console.log(res)
-          this.hotelList= res.data.data;
+          // console.log(res);
+          let { id } = res.data.data[0];
+          this.$axios({
+            url: "/hotels",
+            params: { city: id }
+          }).then(res => {
+            // console.log(res)
+            this.hotelList = res.data.data;
+          });
+          // console.log(id)
         });
-        // console.log(id)
-      });
+      }
     }
   }
 };
