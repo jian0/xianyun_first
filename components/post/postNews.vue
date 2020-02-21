@@ -17,8 +17,8 @@
       <el-main v-for="(item,index) in data" :key="index">
         <!-- 新闻信息 -->
         <!-- 三张图的展示 -->
-        <div class="san" v-if="item.images.length >= 3" >
-          <h3 class="item" @click="jumpDetails(item)">
+        <div class="san" v-if="item.images.length >= 3" @click="jumpDetails(item)" >
+          <h3 class="item">
             <nuxt-link to="#" >{{item.title}}</nuxt-link>
           </h3>
           <p
@@ -54,7 +54,7 @@
           </div>
         </div>
         <!-- 一张图的展示 -->
-        <div class="yi" v-if='item.images.length <= 2 && item.images.length >= 1'>
+        <div class="yi" v-if='item.images.length <= 2 && item.images.length >= 1' @click="jumpDetails(item)">
           <el-row type="flex" class="row-bg" justify="space-between">
             <el-col :span="6">
               <div class="img">
@@ -66,7 +66,7 @@
             </el-col>
             <el-col :span="16">
               <div class="text">
-                <h3 @click="jumpDetails(item)">
+                <h3 >
                   <nuxt-link to="#">{{item.title}}</nuxt-link>
                 </h3>
                 <p>{{item.summary}}</p>
@@ -91,8 +91,8 @@
           </el-row>
         </div>
         <!-- 无图的展示 -->
-          <div class="noImg" v-if='item.images.length === 0'>
-            <div class="title" @click="jumpDetails(item)">{{item.title}}</div>
+          <div class="noImg" v-if='item.images.length === 0' @click="jumpDetails(item)">
+            <div class="title" >{{item.title}}</div>
             <div class="concent">{{item.summary}}</div>
              <!-- 底部表示展示 -->
              <div class="foot">
