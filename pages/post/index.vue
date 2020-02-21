@@ -5,7 +5,7 @@
       <el-col :span="6">
         <div class="navs">
           <!-- 上方菜单栏 -->
-          <PostMenu></PostMenu>
+          <PostMenu @giveId="giveCityId"></PostMenu>
           <!-- 推荐城市 -->
           <div class="goodCity">
             <p>推荐城市</p>
@@ -20,7 +20,7 @@
           <PostInput @getCityId="getCityId"></PostInput>
 
           <!-- 右侧新闻模块 -->
-          <PostNews :data='articleList'></PostNews>
+          <PostNews :data="articleList"></PostNews>
 
           <!-- 引入分页组件 -->
           <el-pagination
@@ -67,16 +67,22 @@ export default {
     PostNews
   },
   methods: {
-    // 获得城市id
+    // 输入框表单组件获得城市id
     getCityId(id) {
       this.getId = id;
-      console.log(this.getId);
+      // console.log(this.getId);
+      this.init();
+    },
+    // 菜单栏组件
+    giveCityId(id) {
+      this.getId = id;
+      // console.log(this.getId);
       this.init();
     },
     // 每页显示多少条
     handleSizeChange(val) {
       this.limit = val;
-       this.$router.replace({
+      this.$router.replace({
         url: this.$route.path,
         query: {
           start: this.start,
@@ -113,7 +119,7 @@ export default {
       }).then(res => {
         //获取文章数据
         this.articleList = res.data.data;
-         console.log(this.articleList)
+        // console.log(this.articleList);
         this.total = res.data.total;
       });
     }

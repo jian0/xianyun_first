@@ -9,7 +9,7 @@
      <ul>
        <li v-for="(value,index) in menuList[current].children" :key="index">
          <span class="num">{{index + 1}}</span>
-         <span class='city'>{{value.city}}</span>
+         <span class='city' @click='giveCityId(value)'>{{value.city}}</span>
          <i class="desc">{{value.desc}}</i>
        </li>
      </ul>
@@ -24,7 +24,9 @@ export default {
         //  储存菜单数据
         menuList : [],
         // 记录储存当前id
-        current : false
+        current : false,
+        // 储存点击的城市id
+        cId : null
      }
  },
   mounted(){
@@ -43,6 +45,19 @@ export default {
     //  鼠标移出事件
      handleOut(){
      this.current = false;
+     },
+    // 点击菜单栏城市获取城市id
+     giveCityId(data){
+      //  console.log(data.city)
+      this.$axios({
+        url : '/cities',
+        params : {
+          name : data.city
+        }
+      }).then(res =>{
+        this.cId = res.data.data[0].id;
+        this.$emit('giveId',this.cId);
+      })
      }
   }
 }
