@@ -136,10 +136,16 @@ export default {
         }
       }).then(res => {
         //   console.log(res)
-      if(res.data.message === '新增成功'){
-         this.$message.success('新增数据成功！')
-         this.$router.push('/post');
-       }
+        // 备注：目前版本不支持发表图片
+        if (res.data.message === "新增成功") {
+          this.$message.success("新增数据成功！");
+          // 跳转到旅游攻略首页（版本一）
+          // this.$router.push('/post');
+          // 清空当前表单（版本二 —— 线上相同）
+          this.form.title = "";
+          this.form.content = "";
+          this.cityName = "";
+        }
       });
     }
   }
