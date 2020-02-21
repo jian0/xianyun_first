@@ -129,19 +129,31 @@ export default {
           //   });
           // });
 
+          var markerList= [];
+          var marker;
+          var center;
           // data是具体的定位信息
-          var marker = new AMap.Marker({
-            position: new AMap.LngLat(data.position.lng, data.position.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-            title: data.formattedAddress
+          _this.$store.state.hotel.hotelList.forEach((e,i)=>{
+             if(i==8) {
+               center = e;
+             }
+              marker = new AMap.Marker({
+              position: new AMap.LngLat(e.location.longitude, e.location.latitude), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+              title: e.name,
+            });
+            markerList.push(marker)
           });
+        
           //再让地图刷新一次
           var map = new AMap.Map("container", {
             resizeEnable: true,
-            zoom: 13,
-            center: [data.position.lng, data.position.lat]
+            zoom: 16,
+            //居中到中间
+            center: [center.location.longitude, center.location.latitude]
           });
+          
           // 将创建的点标记添加到已有的地图实例：
-          map.add(marker);
+          map.add(markerList);
           // map.remove(marker)
         }
         function onError(data) {

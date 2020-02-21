@@ -65,7 +65,7 @@ export default {
             params: { city: id }
           }).then(res => {
             // console.log(res)
-          this.$store.commit('hotel/setHotelList',res.data.data[0]);
+          this.$store.commit('hotel/setHotelList',res.data.data);
           });
           // console.log(id)
         });
