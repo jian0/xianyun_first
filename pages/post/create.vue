@@ -43,7 +43,7 @@
         <div class="drafts">
           <p>草稿箱(1)</p>
           <i class="el-icon-edit" @click="handleEmpty"></i>
-          <span class="time">2020-2-22</span>
+          <span class="time">{{nowDate}}</span>
         </div>
       </el-col>
     </el-row>
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -65,7 +66,9 @@ export default {
       // 建议输入的城市
       cityName: "",
       // 储存城市数据
-      cityDataList: []
+      cityDataList: [],
+      // 储存当前时间
+       nowDate : ''
     };
   },
   methods: {
@@ -148,6 +151,11 @@ export default {
         }
       });
     }
+  },
+  mounted() {
+    //获取当前日期
+    var date = new Date();
+    this.nowDate = moment(date).format('YYYY-MM-DD');
   }
 };
 </script>
