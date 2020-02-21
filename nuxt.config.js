@@ -33,7 +33,9 @@ export default {
   plugins: [
     '@/plugins/element-ui',
     { src: '@/plugins/localStorage', ssr: false },
-    "@/plugins/axios"
+    "@/plugins/axios",
+    // 富文本框的使用
+   { src: '~/plugins/vue-editor.js', mode: 'client' }
   ],
   /*
   ** Nuxt.js dev-modules
