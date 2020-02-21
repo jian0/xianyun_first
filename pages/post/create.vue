@@ -9,7 +9,7 @@
         <!-- 富文本框 -->
         <div class="editor">
           <client-only>
-            <vue-editor v-model="inputText"></vue-editor>
+            <vue-editor v-model="form.content"></vue-editor>
           </client-only>
         </div>
         <!-- 带建议的输入框 -->
@@ -42,7 +42,7 @@
       <el-col :span="4">
         <div class="drafts">
           <p>草稿箱(1)</p>
-          <i class="el-icon-edit"></i>
+          <i class="el-icon-edit" @click="handleEmpty"></i>
           <span class="time">2019-10-20</span>
         </div>
       </el-col>
@@ -59,7 +59,7 @@ export default {
       //发布文章参数
       form: {
         title: "",
-        city: "",
+        city: '',
         content: ""
       },
       // 建议输入的城市
@@ -93,12 +93,19 @@ export default {
     // 建议输入框点击
     handleSelect(data) {
       this.form.city = data.id;
+       console.log(this.form.city)
     },
     // 建议输入框失焦点触发
     handleBlur() {
       this.form.city = this.cityDataList[0].id;
       this.cityName = this.cityDataList[0].value;
-      console.log(this.form.city);
+      console.log(this.form.city)
+    },
+    // 清空操作
+    handleEmpty() {
+      this.form.title = "";
+      this.form.content = "";
+      this.cityName = "";
     }
   }
 };
