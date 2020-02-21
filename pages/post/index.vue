@@ -70,6 +70,7 @@ export default {
     // 输入框表单组件获得城市id
     getCityId(id) {
       this.getId = id;
+      this.start = 0;
       // console.log(this.getId);
       this.init();
     },
@@ -77,6 +78,7 @@ export default {
     giveCityId(id) {
       this.getId = id;
       // console.log(this.getId);
+      this.start = 0;
       this.init();
     },
     // 每页显示多少条
