@@ -21,10 +21,11 @@
             <div class="city">
               <el-autocomplete
                 class="inline-input"
-                v-model="form.city"
+                v-model="cityName"
                 :fetch-suggestions="querySearch"
                 placeholder="请输入城市"
                 @select="handleSelect"
+                @blur="handleBlur"
               ></el-autocomplete>
             </div>
           </el-col>
@@ -60,12 +61,45 @@ export default {
         title: "",
         city: "",
         content: ""
-      }
+      },
+      // 建议输入的城市
+      cityName: "",
+      // 储存城市数据
+      cityDataList: []
     };
   },
   methods: {
-    querySearch(value, callback) {},
-    handleSelect(data) {}
+    // 建议输入框
+    querySearch(value, callback) {
+      if (!value) {
+        this.cityDataList = [];
+        callback([]);
+        return;
+      }
+      this.$axios({
+        url: "/cities",
+        params: {
+          name: value
+        }
+      }).then(res => {
+        let newList = res.data.data.map(v => {
+          v.value = v.name.replace("市", "");
+          return v;
+        });
+        callback(newList);
+        this.cityDataList = newList;
+      });
+    },
+    // 建议输入框点击
+    handleSelect(data) {
+      this.form.city = data.id;
+    },
+    // 建议输入框失焦点触发
+    handleBlur() {
+      this.form.city = this.cityDataList[0].id;
+      this.cityName = this.cityDataList[0].value;
+      console.log(this.form.city);
+    }
   }
 };
 </script>
@@ -90,53 +124,53 @@ export default {
   /deep/.ql-editor {
     height: 400px;
   }
-  .advise span{
-      display: inline-block;
-      color: #666;
-      font-size: 15px;
-      padding-top: 8px;
-      margin: 20px 0;
+  .advise span {
+    display: inline-block;
+    color: #666;
+    font-size: 15px;
+    padding-top: 8px;
+    margin: 20px 0;
   }
-  .btn{
-      margin:20px 0;
-      i{  
-          margin: 20px 12px;
-          color: #666;
-          font-size: 14px;
+  .btn {
+    margin: 20px 0;
+    i {
+      margin: 20px 12px;
+      color: #666;
+      font-size: 14px;
+    }
+    span {
+      font-size: 15px;
+      color: orange;
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
       }
-      span {
-          font-size: 15px;
-          color: orange;
-          &:hover{
-              cursor: pointer;
-              text-decoration: underline;
-          }
-      }
+    }
   }
 }
-.drafts{
-    margin: 30px 0;
-    padding-left: 12px;
-    border: 1px solid #ccc;
-    p {
-        font-size: 15px;
-        color: #666;
-        margin: 15px 0;
+.drafts {
+  margin: 30px 0;
+  padding-left: 12px;
+  border: 1px solid #ccc;
+  p {
+    font-size: 15px;
+    color: #666;
+    margin: 15px 0;
+  }
+  /deep/i {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 12px;
+    &:hover {
+      cursor: pointer;
+      color: orange;
     }
-    /deep/i{
-        display: block;
-        font-size: 18px;
-        margin-bottom: 12px;
-        &:hover{
-            cursor: pointer;
-            color: orange;
-        }
-    }
-    .time {
-        font-size: 15px;
-        color: #666;
-        display: block;
-        margin-bottom: 22px;
-    }
+  }
+  .time {
+    font-size: 15px;
+    color: #666;
+    display: block;
+    margin-bottom: 22px;
+  }
 }
 </style>
