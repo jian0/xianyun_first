@@ -110,22 +110,37 @@ export default {
     },
     // 点击发布
     handleSubmit() {
-        // 判断标题和内容不能为空
-      if (this.form.title === "" || this.form.content === '') {
+      // 判断标题和内容不能为空
+      if (this.form.title === "" || this.form.content === "") {
         this.$alert("注意，标题或者内容不能为空！", "温馨提示", {
           confirmButtonText: "确定",
-           type : 'warning'
+          type: "warning"
         });
         return;
       }
-    //判断城市
-      if(this.cityName === '' || this.form.city === ''){
-          this.$alert("注意，城市名称有误！", "温馨提示", {
+      //判断城市
+      if (this.cityName === "" || this.form.city === "") {
+        this.$alert("注意，城市名称有误！", "温馨提示", {
           confirmButtonText: "确定",
-           type : 'error'
+          type: "error"
         });
         return;
       }
+      this.$axios({
+        url: "/posts",
+        method: "post",
+        data: this.form,
+        headers: {
+          // 必须要做token前面加上`Bearer `字符串，后面有一个空格的
+          Authorization: `Bearer ` + this.$store.state.user.userInfo.token
+        }
+      }).then(res => {
+        //   console.log(res)
+      if(res.data.message === '新增成功'){
+         this.$message.success('新增数据成功！')
+         this.$router.push('/post');
+       }
+      });
     }
   }
 };
