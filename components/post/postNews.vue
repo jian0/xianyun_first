@@ -14,52 +14,52 @@
           </el-col>
         </el-row>
       </el-header>
-      <el-main>
+      <el-main v-for="(item,index) in data" :key="index">
         <!-- 新闻信息 -->
         <!-- 三张图的展示 -->
-        <div class="san">
+        <div class="san" v-if="item.images.length >= 3" >
           <h3 class="item">
-            <nuxt-link to="#">塞班贵？一定是你的打开方式不对！6000块玩转塞班</nuxt-link>
+            <nuxt-link to="#">{{item.title}}</nuxt-link>
           </h3>
           <p
             class="comment"
-          >大家对塞班岛总存在着这样的误解，知道它是美属地盘，就理所当然地觉得这里的花费一定很高，花费高有高的玩法，那如果只有6000块的预算呢？要怎么玩？关于旅行这件事，我们要让钱花得更有道理，收下这份攻略，带你6000块花式玩转塞班。图：塞班岛。 by第5季旅游一、怎样用6000块玩转塞班？大多数出境游客人不做预算或最终花费远远超出预算，对预算的合理分配对控制我们旅行的花费就很重要了，如何只花6000块玩转塞班岛，对预算超支say no？</p>
-          <img
-            src="https://n3-q.mafengwo.net/s10/M00/E8/E4/wKgBZ1octoCABhgLAAafahORRLs91.jpeg?imageView2%2F2%2Fw%2F1360%2Fq%2F90"
+          >{{item.summary}}</p>
+          <img v-for='(value,index) in item.images' :key="index"
+            :src='value'
             alt
           />
-          <img src="https://images.mafengwo.net/images/i/face/brands_v3/6@2x.png" alt />
+          <!-- <img src="https://images.mafengwo.net/images/i/face/brands_v3/6@2x.png" alt />
           <img
             src="https://p1-q.mafengwo.net/s10/M00/E9/33/wKgBZ1octwiAAKAoAAJ9ixcJc9M71.jpeg?imageView2%2F2%2Fw%2F1360%2Fq%2F90"
             alt
-          />
+          /> -->
           <!-- 新闻底部小信息 -->
           <div class="foot">
             <el-row type="flex" class="row-bg" justify="space-between">
               <el-col :span="12">
                 <div class="adress">
-                  <i class="el-icon-location-outline">北京市</i>
+                  <i class="el-icon-location-outline">{{item.cityName}}</i>
                   <span>
                     <i>by</i>
                     <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt />
-                    地球发动机
+                    {{item.account.nickname}}
                   </span>
-                  <i class="el-icon-view">13892</i>
+                  <i class="el-icon-view">{{item.watch}}</i>
                 </div>
               </el-col>
               <el-col :span="2">
-                <span class="zan">79 赞</span>
+                <span class="zan">{{item.like}} 赞</span>
               </el-col>
             </el-row>
           </div>
         </div>
         <!-- 一张图的展示 -->
-        <div class="yi">
+        <div class="yi" v-if='item.images.length <= 2 && item.images.length >= 1'>
           <el-row type="flex" class="row-bg" justify="space-between">
             <el-col :span="6">
               <div class="img">
-                <img
-                  src="https://p3-q.mafengwo.net/s13/M00/41/C4/wKgEaVyaOs2AA9IKAAj8Lg2YzaU64.jpeg?imageMogr2%2Fthumbnail%2F1360x%2Fstrip%2Fquality%2F90"
+                <img v-for='(value,index) in item.images' :key="index"
+                  :src='value'
                   alt
                 />
               </div>
@@ -67,36 +67,65 @@
             <el-col :span="16">
               <div class="text">
                 <h3>
-                  <nuxt-link to="#">远东行：用好奇心打量这座城 —— 最值得收藏的海参崴出行攻略</nuxt-link>
+                  <nuxt-link to="#">{{item.title}}</nuxt-link>
                 </h3>
-                <p>想象一下一个距离 北京 只有2.5小时飞行距离的城市：身处 亚洲 却能感受到十足的欧陆风情——欧式建筑和街道，金发碧眼的路人，正宗的西餐外加只有国内一半售价的帝王蟹可以敞开吃——更难能可贵的是，这里对国人（实质）免签，有直飞航班，低廉的物价，且尚未有太多的游客涉足还保留着原汁原味的传统风情！</p>
+                <p>{{item.summary}}</p>
                 <el-row type="flex" class="row-bg" justify="space-between">
                   <el-col :span="14">
                     <div class="adress">
-                      <i class="el-icon-location-outline">青岛市</i>
+                      <i class="el-icon-location-outline">{{item.cityName}}</i>
                       <span>
                        <i>by</i>
                         <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt />
-                        地球发动机
+                        {{item.account.nickname}}
                       </span>
-                      <i class="el-icon-view">13892</i>
+                      <i class="el-icon-view">{{item.watch}}</i>
                     </div>
                   </el-col>
                   <el-col :span="3">
-                    <span class="zan">20 赞</span>
+                    <span class="zan">{{item.like}} 赞</span>
                   </el-col>
                 </el-row>
               </div>
             </el-col>
           </el-row>
         </div>
+        <!-- 无图的展示 -->
+          <div class="noImg" v-if='item.images.length === 0'>
+            <div class="title">{{item.title}}</div>
+            <div class="concent">{{item.summary}}</div>
+             <!-- 底部表示展示 -->
+             <div class="foot">
+            <el-row type="flex" class="row-bg" justify="space-between">
+              <el-col :span="12">
+                <div class="adress">
+                  <i class="el-icon-location-outline">{{item.cityName}}</i>
+                  <span>
+                    <i>by</i>
+                    <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt />
+                     {{item.account.nickname}}
+                  </span>
+                  <i class="el-icon-view">{{item.watch}}</i>
+                </div>
+              </el-col>
+              <el-col :span="2">
+                <span class="zan">{{item.like}} 赞</span>
+              </el-col>
+            </el-row>
+          </div>
+          </div>
       </el-main>
     </el-container>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props : ['data'],
+  mounted(){
+    
+  }
+};
 </script>
 
 <style scoped lang='less'>
@@ -206,5 +235,22 @@ export default {};
     -webkit-box-orient: vertical;
     }
 }
+}
+.noImg {
+  .title {
+     font-size: 16px;
+     margin-bottom: 22px;
+     color: #000;
+     border-bottom: none;
+     &:hover{
+       cursor: pointer;
+       color: orange;
+     }
+  }
+  .concent {
+     color: #ccc;
+     font-size: 14px;
+     margin-bottom: 60px;
+  }
 }
 </style>

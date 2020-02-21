@@ -60,7 +60,7 @@ export default {
     },
     // 点击快捷方式查询
     handleClick(item){
-    // console.log(item.id)
+    //  console.log(item.id)
     this.cityId = item.id;
     this.$emit('getCityId',this.cityId);
     }

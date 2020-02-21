@@ -20,7 +20,7 @@
           <PostInput @getCityId="getCityId"></PostInput>
 
           <!-- 右侧新闻模块 -->
-          <PostNews></PostNews>
+          <PostNews :data='articleList'></PostNews>
 
           <!-- 引入分页组件 -->
           <el-pagination
@@ -56,7 +56,7 @@ export default {
       // 储存分页总数量
       total: 10,
       // 储存城市id
-      getId: 1,
+      getId: null,
       // 储存文章列表数据
       articleList: []
     };
@@ -70,7 +70,7 @@ export default {
     // 获得城市id
     getCityId(id) {
       this.getId = id;
-      // console.log(this.getId);
+      console.log(this.getId);
       this.init();
     },
     // 每页显示多少条
@@ -113,7 +113,7 @@ export default {
       }).then(res => {
         //获取文章数据
         this.articleList = res.data.data;
-        console.log(this.articleList);
+         console.log(this.articleList)
         this.total = res.data.total;
       });
     }
