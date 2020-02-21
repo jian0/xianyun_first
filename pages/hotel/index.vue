@@ -13,7 +13,7 @@
       </div>
 
       <!-- 搜索价格-->
-      <SearchPrice :citydetail='citydetail'/>
+      <SearchPrice />
 
       <!-- 地方和地图 -->
       <AreaMap />
@@ -33,14 +33,6 @@ import AreaMap from "@/components/hotel/areaMap";
 import HotelType from "@/components/hotel/hotelType";
 import HotelShow from "@/components/hotel/hotelShow";
 export default {
-  data() {
-    return {
-      hotelList: [],
-      citydetail:{
-        scenics:[],
-      }
-    };
-  },
   components: {
     SearchPrice,
     AreaMap,
@@ -67,13 +59,13 @@ export default {
         }).then(res => {
           // console.log(res);
           let { id } = res.data.data[0];
-          this.citydetail=res.data.data[0];
+          this.$store.commit('hotel/setCityArea',res.data.data[0].scenics);
           this.$axios({
             url: "/hotels",
             params: { city: id }
           }).then(res => {
             // console.log(res)
-            this.hotelList = res.data.data;
+          this.$store.commit('hotel/setHotelList',res.data.data[0]);
           });
           // console.log(id)
         });

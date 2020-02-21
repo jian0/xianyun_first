@@ -8,43 +8,37 @@
           <el-row>
             <el-col :span="3">区域：</el-col>
             <el-col :span="21">
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <a href="#">人明光城</a>
-              <p><span class="el-icon-d-arrow-right"></span>等29个区域</p>
+              <div class="showarea" :class="{'active':showflag}">
+                <a href="#" v-for="(e,i) in $store.state.hotel.cityarea" :key="i">{{e.name}}</a>
+              </div>
+              <p @click="showflag=!showflag"><span class="el-icon-d-arrow-right" :class="{'zhuan':showflag}" ></span>等{{$store.state.hotel.cityarea.length}}个区域</p>
             </el-col>
             <!-- 需要用到文字提示组件 -->
             <el-col :span="3"
-              >均价 <span class="el-icon-question"> </span> ：</el-col
-            >
+              >均价 <el-tooltip content="等级均价由平日价格计算得出，节假日价格会有上浮。" placement="top">
+                <span class="el-icon-question"> </span>
+              </el-tooltip> ：
+              </el-col>
             <el-col :span="21">
               <el-row type="flex" justify="space-between">
                 <div class="cheap">
                   <i class="iconfont iconhuangguan yellow" v-for="e in 3" :key="e"></i>
-                  ¥332
+                  <el-tooltip content="等级评定是针对房价，设施和服务等各方面水平的综合评估。(经济型/舒适性)" placement="bottom">
+                    <span>¥332</span>
+                  </el-tooltip>
+                  
                 </div>
                 <div class="middle">
                   <i class="iconfont iconhuangguan yellow" v-for="e in 4" :key="e"></i>
-                  ¥521
+                  <el-tooltip content="等级评定是针对房价，设施和服务等各方面水平的综合评估。(高档型)" placement="bottom">
+                    <span>¥521</span>
+                  </el-tooltip>
                 </div>
                 <div class="expensive">
                   <i class="iconfont iconhuangguan yellow" v-for="e in 5" :key="e"></i>
-                  ¥768
+                  <el-tooltip content="等级评定是针对房价，设施和服务等各方面水平的综合评估。(顶呱呱型)" placement="bottom">
+                    <span>¥332</span>
+                  </el-tooltip>
                 </div>
               </el-row>
             </el-col>
@@ -62,9 +56,15 @@
 
 <script>
 export default {
+  props:{
+    cityarea:{
+      type:Object,
+    }
+  },
   data() {
     return {
-      cityName: ""
+      cityName: "",
+      showflag:false,
     };
   },
   mounted() {
@@ -191,5 +191,16 @@ export default {
 #container {
   width: 100%;
   height: 100%;
+}
+.showarea{
+  height: 43px;
+  overflow: hidden;
+}
+.active{
+  height: 200px;
+  overflow: scroll;
+}
+.zhuan{
+  transform: rotate(270deg)!important;
 }
 </style>
