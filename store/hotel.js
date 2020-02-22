@@ -6,6 +6,7 @@ export const state=()=>{
         hotelList:{
             data:[],
         },
+        cityId:''
     }
 }
 export const mutations ={
@@ -16,6 +17,10 @@ export const mutations ={
     //城市里的酒店
     setHotelList(state,data){
         state.hotelList = data;
+    },
+    //cityid存着，直接用，因为每次请求都要佩戴的它
+    setCityId(state,data) {
+        state.cityId = data;
     }
 }
 export const actions ={

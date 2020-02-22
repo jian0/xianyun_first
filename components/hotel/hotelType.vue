@@ -6,18 +6,17 @@
         <el-col :span="5" class="price">
           <el-row type="flex" justify="space-between">
             <el-col :span="16">价格</el-col>
-            <el-col :span="8">0-4000</el-col>
+            <el-col :span="8">0-{{money}}</el-col>
           </el-row>
           <el-row>
-            <!-- 没有v-model -->
-            <el-slider input-size='small' v-model="money" :max="4000"></el-slider>
+            <el-slider input-size='small' v-model="money" :max="4000" @change="choosePrice"></el-slider>
           </el-row>
         </el-col>
         <!-- level -->
         <el-col :span="5" class="level">
           <el-row type="flex" justify="center">住宿等级</el-row>
-          <el-row style="margin-top:5px;">
-            <el-dropdown style="width:100%;">
+          <el-row style="margin-top:13px;">
+            <el-dropdown style="width:100%;" @command="chooselevel">
               <span class="el-dropdown-link" style="display:block;width:100%;">
                 <el-row type="flex" justify="space-between">
                   不限<i class="el-icon-arrow-down el-icon--right"></i>
@@ -25,9 +24,7 @@
               </span>
               <el-dropdown-menu slot="dropdown"
                 ><!--下拉 -->
-                <el-dropdown-item v-for="(e,i) in levels" :key="i"><el-checkbox style="width:150px"
-                    >{{e.name}}</el-checkbox
-                  ></el-dropdown-item
+                <el-dropdown-item v-for="(e,i) in levels" :key="i" :command='i+1' icon="el-icon-check" style="width:150px" :class="{active:flag}">{{e.name}}</el-dropdown-item
                 >
               </el-dropdown-menu>
             </el-dropdown>
@@ -35,7 +32,7 @@
         </el-col>
         <el-col :span="5" class="leixing">
           <el-row type="flex" justify="center">住宿类型</el-row>
-          <el-row style="margin-top:5px;">
+          <el-row style="margin-top:13px;">
             <el-dropdown style="width:100%;">
               <span class="el-dropdown-link" style="display:block;width:100%;">
                 <el-row type="flex" justify="space-between">
@@ -54,7 +51,7 @@
         </el-col>
         <el-col :span="5" class="sheshi">
           <el-row type="flex" justify="center">酒店设施</el-row>
-          <el-row style="margin-top:5px;">
+          <el-row style="margin-top:13px;">
             <el-dropdown style="width:100%;">
               <span class="el-dropdown-link" style="display:block;width:100%;">
                 <el-row type="flex" justify="space-between">
@@ -73,7 +70,7 @@
         </el-col>
         <el-col :span="4" class="pinpai">
           <el-row type="flex" justify="center">酒店品牌</el-row>
-          <el-row style="margin-top:5px;">
+          <el-row style="margin-top:13px;">
             <el-dropdown style="width:100%;">
               <span class="el-dropdown-link" style="display:block;width:100%;">
                 <el-row type="flex" justify="space-between">
@@ -105,7 +102,8 @@ export default {
       types:[],
       assets:[],
       brands:[],
-      money:2000,
+      money:4000,
+      flag:false,
     }
   },
   mounted () {
@@ -118,6 +116,29 @@ export default {
       this.assets=res.data.data.assets;
       this.brands=res.data.data.brands;
     })
+  },
+  methods: {
+    choosePrice(value){
+      // console.log(this.money)//一样的
+      // console.log(value)
+      //四个随便一个改变了都要触发请求而且要佩戴者id
+      this.$axios({
+        url:'/hotels',
+        params:{
+          city:this.$store.state.hotel.cityId,
+          price_lt:value,
+        }
+      }).then(res=>{
+        console.log(res);
+        //注意的是现在没有实现页面路由变化还有就是酒店的数据传递
+        //文档中参数有问题，要和线上的对比一下
+      })
+    },
+    //选择level
+    chooselevel(value){
+      this.flag= !this.flag;
+      console.log(value);
+    }
   }
 };
 </script>
@@ -146,5 +167,8 @@ export default {
       height: 100%;
     }
   }
+}
+.active{
+  color: #409eff
 }
 </style>

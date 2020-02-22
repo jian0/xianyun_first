@@ -60,6 +60,7 @@ export default {
           // console.log(res);
           let { id } = res.data.data[0];
           this.$store.commit('hotel/setOneCity',res.data.data[0]);
+          this.$store.commit('hotel/setCityId',id);
           this.$axios({
             url: "/hotels",
             params: { city: id }
