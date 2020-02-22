@@ -125,6 +125,11 @@ export default {
         }
       }).then(res => {
         // console.log(res);
+        //如果没有数据就不能执行下面的步骤
+        if(res.data.data.length==0) {
+          cb([]);
+          return;
+        }
         let searchareaList = res.data.data;
         searchareaList.forEach(e => {
           e.value = e.name;

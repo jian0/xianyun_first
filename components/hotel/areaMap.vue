@@ -7,11 +7,11 @@
         <el-col class="area" :span="14">
           <el-row>
             <el-col :span="3">区域：</el-col>
-            <el-col :span="21">
+            <el-col :span="21" >
               <div class="showarea" :class="{'active':showflag}">
-                <a href="#" v-for="(e,i) in $store.state.hotel.cityarea" :key="i">{{e.name}}</a>
+                <a href="#" v-for="(e,i) in $store.state.hotel.oneCity.scenics" :key="i">{{e.name}}</a>
               </div>
-              <p @click="showflag=!showflag"><span class="el-icon-d-arrow-right" :class="{'zhuan':showflag}" ></span>等{{$store.state.hotel.cityarea.length}}个区域</p>
+              <p @click="showflag=!showflag"><span class="el-icon-d-arrow-right" :class="{'zhuan':showflag}" ></span>等{{$store.state.hotel.oneCity.scenics.length}}个区域</p>
             </el-col>
             <!-- 需要用到文字提示组件 -->
             <el-col :span="3"
@@ -56,11 +56,6 @@
 
 <script>
 export default {
-  props:{
-    cityarea:{
-      type:Object,
-    }
-  },
   data() {
     return {
       cityName: "",
@@ -129,32 +124,7 @@ export default {
           //   });
           // });
 
-          var markerList= [];
-          var marker;
-          var center;
-          // data是具体的定位信息
-          _this.$store.state.hotel.hotelList.forEach((e,i)=>{
-             if(i==8) {
-               center = e;
-             }
-              marker = new AMap.Marker({
-              position: new AMap.LngLat(e.location.longitude, e.location.latitude), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-              title: e.name,
-            });
-            markerList.push(marker)
-          });
-        
-          //再让地图刷新一次
-          var map = new AMap.Map("container", {
-            resizeEnable: true,
-            zoom: 16,
-            //居中到中间
-            center: [center.location.longitude, center.location.latitude]
-          });
-          
-          // 将创建的点标记添加到已有的地图实例：
-          map.add(markerList);
-          // map.remove(marker)
+          _this.showhotel();
         }
         function onError(data) {
           // 定位出错
@@ -162,6 +132,49 @@ export default {
         }
       });
     };
+    
+  },
+  watch: {
+    $route(){
+      // console.log(this.$route.query)
+       var map = new AMap.Map("container", {
+            resizeEnable: true,
+            
+        });
+        this.showhotel();
+
+    }
+  },
+  methods: {
+    showhotel(){
+          var markerList= [];
+          var marker;
+          var center_lng=0;
+          var center_lat=0;
+          var content;
+          var all_length = this.$store.state.hotel.hotelList.length
+          this.$store.state.hotel.hotelList.forEach((e,i)=>{
+            center_lng += e.location.longitude;
+            center_lat += e.location.latitude;
+            // console.log(center_lng)
+              marker = new AMap.Marker({
+              position: new AMap.LngLat(e.location.longitude, e.location.latitude), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+              title: e.name,
+              content:`<div style='position: relative;'><img src='//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png' style='width:30px'><span style='position: absolute;top:3px;left:9px;color:#fff;font-size=16px'>${i+1}</span></div>`
+            });
+            markerList.push(marker)
+          });
+          // 再让地图刷新一次
+          var map = new AMap.Map("container", {
+            resizeEnable: true,
+            zoom:10,
+            //居中到中间
+            center: [center_lng/all_length, center_lat/all_length],
+          });
+          // // 将创建的点标记添加到已有的地图实例：
+          map.add(markerList);
+          // map.remove(marker)
+    }
   }
 };
 </script>
