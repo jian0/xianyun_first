@@ -3,7 +3,9 @@ export const state=()=>{
         oneCity:{
             scenics:[]
         },
-        hotelList:[],
+        hotelList:{
+            data:[],
+        },
     }
 }
 export const mutations ={

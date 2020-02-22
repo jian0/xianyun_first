@@ -2,7 +2,7 @@
   <div class="hotelShow">
     <!-- 酒店介绍 -->
     <!-- 如果没有获取到数据就显示着没有数据 -->
-    <div class="hotel" v-for="(e,i) in $store.state.hotel.hotelList" :key="i">
+    <div class="hotel" v-for="(e,i) in $store.state.hotel.hotelList.data" :key="i">
       <el-row type="flex" :gutter="10" class="hotel-bottom">
         <el-col :span="8">
           <a href="#" class="pic"><img :src="e.photos" alt=""/></a>
@@ -54,9 +54,12 @@
       <el-row type="flex" justify="end">
         <el-pagination
           layout="prev, pager, next"
-          :total="50"
+          :total="$store.state.hotel.hotelList.total"
           prev-text="<　上一页"
           next-text="下一页　>"
+          @current-change="handleCurrentChange"
+          :current-page="1"
+          :page-size="$store.state.hotel.hotelList.data.length"
         >
         </el-pagination>
       </el-row>
@@ -70,6 +73,12 @@ export default {
         return {
             
         }
+    },
+    methods: {
+      //页面改变时候触发
+      handleCurrentChange(){
+
+      }
     }
 };
 </script>

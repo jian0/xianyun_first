@@ -152,8 +152,8 @@ export default {
           var center_lng=0;
           var center_lat=0;
           var content;
-          var all_length = this.$store.state.hotel.hotelList.length
-          this.$store.state.hotel.hotelList.forEach((e,i)=>{
+          var all_length = this.$store.state.hotel.hotelList.data.length
+          this.$store.state.hotel.hotelList.data.forEach((e,i)=>{
             center_lng += e.location.longitude;
             center_lat += e.location.latitude;
             // console.log(center_lng)
