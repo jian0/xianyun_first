@@ -41,9 +41,12 @@
       <!-- 右侧草稿箱 -->
       <el-col :span="4">
         <div class="drafts">
-          <p>草稿箱(1)</p>
-          <i class="el-icon-edit" @click="handleEmpty"></i>
-          <span class="time">{{nowDate}}</span>
+          <p>草稿箱({{this.releaseSucceedList.length}})</p>
+          <!-- 发布成功的列表展示 -->
+          <div v-for="(item,index) in this.releaseSucceedList" :key="index">
+            <i class="el-icon-edit" @click="handleEmpty(item)">  {{item.title}}</i>
+            <span class="time">{{nowDate}}</span>
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -51,7 +54,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from "moment";
 export default {
   data() {
     return {
@@ -68,7 +71,9 @@ export default {
       // 储存城市数据
       cityDataList: [],
       // 储存当前时间
-       nowDate : ''
+      nowDate: "",
+      //储存已经发布的内容
+      releaseSucceedList: []
     };
   },
   methods: {
@@ -105,11 +110,9 @@ export default {
       this.cityName = this.cityDataList[0].value;
       console.log(this.form.city);
     },
-    // 清空操作
-    handleEmpty() {
-      this.form.title = "";
-      this.form.content = "";
-      this.cityName = "";
+    // 点击草稿箱查看当前内容
+    handleEmpty(item) {
+       this.form = item;
     },
     // 点击发布
     handleSubmit() {
@@ -145,6 +148,8 @@ export default {
           // 跳转到旅游攻略首页（版本一）
           // this.$router.push('/post');
           // 清空当前表单（版本二 —— 线上相同）
+          // 上传成功将信息保存在展示数组中
+          this.releaseSucceedList.unshift({...this.form});
           this.form.title = "";
           this.form.content = "";
           this.cityName = "";
@@ -155,7 +160,7 @@ export default {
   mounted() {
     //获取当前日期
     var date = new Date();
-    this.nowDate = moment(date).format('YYYY-MM-DD');
+    this.nowDate = moment(date).format("YYYY-MM-DD");
   }
 };
 </script>
