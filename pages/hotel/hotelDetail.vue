@@ -38,9 +38,9 @@
           </el-row>
         </div>
         <!-- 酒店价格来源 -->
-        <HotelInfoIntro :hotelInfoData='hotelData'></HotelInfoIntro>
+         <HotelInfoIntro :hotelInfoData='hotelData'></HotelInfoIntro>
         <HotelMap :mapData='hotelData'></HotelMap>
-        <RoomInfo :roomInfo='hotelData'></RoomInfo>
+        <RoomInfo :roomInfo='hotelData'></RoomInfo> 
       </div>
       <HotelComment :commentData='hotelData'></HotelComment>
     </div>
@@ -70,11 +70,6 @@ export default {
     HotelComment
   },
   mounted() {
-    this.$router.push({
-      path: "/hotel/hotelDetail",
-      query: { id: 185 }
-    });
-    console.log(this.$route.query.id);
     this.$axios({
       method: "get",
       url: "/hotels?id=" + this.$route.query.id

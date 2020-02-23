@@ -48,6 +48,7 @@ data(){return{
     }).then(res=>{
       // console.log(res)
     })
+    //  console.log(this.roomInfo)
   }
 
 

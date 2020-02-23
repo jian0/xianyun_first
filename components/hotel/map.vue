@@ -5,10 +5,18 @@
       <div class="poi-list">
         <el-tabs v-model="editableTabs" type="border-card" @tab-click="handleSearch">
           <el-tab-pane label="风景" name="1">
-            <div class="poi-list-ol" id="panel"></div>
+            <div class="poi-list-ol" id="panel">
+              <ul>
+                <li v-for="(item,index) in list" :key="index">{{item.name}}</li>
+              </ul>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="交通" name="2">
-            <div class="poi-list-ol" id="traffic"></div>
+            <div class="poi-list-ol" id="traffic">
+              <ul>
+                <li v-for="(item,index) in list" :key="index">{{item.name}}</li>
+              </ul>
+            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -18,19 +26,12 @@
 
 <script>
 export default {
-  props: {
-    data: {
-      type: Object,
-      default: {
-        location: {}
-      }
-    }
-  },
+  props: ["mapData"],
   data() {
     return {
       centerInfo: [],
       editableTabs: "1",
-      map: ""
+      list: []
     };
   },
   mounted() {
@@ -40,25 +41,50 @@ export default {
     jsapi.charset = "utf-8";
     jsapi.src = url;
     document.head.appendChild(jsapi);
-    window.onLoad = function() {
+    window.onLoad = () => {
       var map = new AMap.Map("container");
-      AMap.service(["AMap.PlaceSearch"], function() {
+      AMap.service(["AMap.PlaceSearch"], () => {
         //构造地点查询类
+
         var placeSearch = new AMap.PlaceSearch({
-          type: "风景"|'交通设施服务', // 兴趣点类别
-          pageSize: 5, // 单页显示结果条数
+          type: "风景|交通设施服务", // 兴趣点类别
+          pageSize: 10, // 单页显示结果条数
           pageIndex: 1, // 页码
-          city: "广州", // 兴趣点城市
+          city: this.mapData[0].name, // 兴趣点城市
           citylimit: true, //是否强制限制在设置的城市内搜索
           map: map, // 展现结果的地图实例
-          panel: "panel", // 结果列表将在此容器中进行展示。
+          //  panel: 'panel', // 结果列表将在此容器中进行展示。
           autoFitView: true // 是否自动调整地图视野使绘制的 Marker点都处于视口的可见范围
         });
 
-        var cpoint = [116.405467, 39.907761]; //中心点坐标
-        placeSearch.searchNearBy("", cpoint, 2000, function(status, result) {});
+        var cpoint = [
+          this.mapData[0].location.longitude,
+          this.mapData[0].location.latitude
+        ]; //中心点坐标
+        console.log(cpoint);
+        placeSearch.searchNearBy("", cpoint, 2000, (status, result) => {
+          console.log(result);
+          this.list = result.poiList.pois;
+          console.log(this.list);
+        });
       });
     };
+  },
+  methods: {
+    handleSearch(tab, event) {
+      // if (tab.index == 0) {
+      //   let scenry = this.list.filter(v => {
+      //     return (v.type = "风景名胜");
+      //   });
+      //   this.list = scenry;
+      // }
+      if (tab.index == 1) {
+        let trafic = this.list.filter(v => {
+          return (v.type = "交通设施服务");
+        });
+        this.list= trafic ;
+      }
+    }
   }
 };
 </script>
@@ -96,6 +122,11 @@ export default {
           border-radius: 20%;
         }
       }
+    }
+    ul li {
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
     }
   }
 }
