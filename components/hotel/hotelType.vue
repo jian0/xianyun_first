@@ -24,8 +24,10 @@
               </span>
               <el-dropdown-menu slot="dropdown"
                 ><!--下拉 -->
-                <div v-for="(e,i) in levels" :key="i"><el-dropdown-item  :command='i' icon="el-icon-check" style="width:150px" :class="{active:levels_num===i}">{{e.name}}</el-dropdown-item
-                ></div>
+                <el-dropdown-item v-for="(e,i) in levels" :key="i" :command='i+1'><el-checkbox style="width:150px"
+                    >{{e.name}}</el-checkbox
+                  ></el-dropdown-item
+                >
               </el-dropdown-menu>
             </el-dropdown>
           </el-row>

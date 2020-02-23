@@ -78,7 +78,7 @@
         </el-popover>
       </el-col>
 
-      <el-button type="primary">查看价格</el-button>
+      <el-button type="primary" @click="checkprice">查看价格</el-button>
     </el-row>
   </div>
 </template>
@@ -158,6 +158,8 @@ export default {
     gettimes() {
       this.startTime = Moment(this.times[0]).format("YYYY-MM-DD");
       this.endTime = Moment(this.times[1]).format("YYYY-MM-DD");
+      this.$store.commit('hotel/setStartTime',this.startTime)
+      this.$store.commit('hotel/setEndTime',this.endTime)
     },
     //获取成人数量
     getadult(value) {
@@ -177,6 +179,20 @@ export default {
       }
       this.allperson_num = this.child_num + this.adult_num;
       console.log(this.allperson_num);
+    },
+    checkprice(){
+      // console.log(this)
+      this.$axios({
+        url:'hotels',
+        params:{
+          enterTime:this.startTime,
+          city:this.$store.state.hotel.cityId,
+          leftTime:this.endTime,
+        }
+      }).then(res=>{
+        console.log(res);
+        this.$store.commit('hotel/setHotelList',res.data)
+      })
     }
   }
 };

@@ -137,11 +137,9 @@ export default {
   watch: {
     $route(){
       // console.log(this.$route.query)
-       var map = new AMap.Map("container", {
-            resizeEnable: true,
-            
-        });
-        this.showhotel();
+        setTimeout(() => {
+          this.showhotel();
+        }, 2000);
 
     }
   },
@@ -164,7 +162,6 @@ export default {
               position: new AMap.LngLat(e.location.longitude, e.location.latitude), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
               title: e.name,
               content:`<div style='position: relative;'><img src='//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png' style='width:30px'><span style='position: absolute;top:3px;left:9px;color:#fff;font-size=16px'>${i+1}</span></div>`
-              
             });
             markerList.push(marker)
           });

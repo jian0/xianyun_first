@@ -5,10 +5,10 @@
     <div class="hotel" v-for="(e,i) in $store.state.hotel.hotelList.data" :key="i">
       <el-row type="flex" :gutter="10" class="hotel-bottom">
         <el-col :span="8">
-          <nuxt-link :to="{path:'/hotel/hotelDetail',query:{id:e.id}}" class="pic"><img :src="e.photos" alt=""/></nuxt-link>
+          <a class="pic" @click="tiaozhuan(e)"><img :src="e.photos" alt=""/></a>
         </el-col>
         <el-col :span="10" class="title">
-          <h2><nuxt-link :to="{path:'/hotel/hotelDetail',query:{id:e.id}}">{{e.name}}</nuxt-link></h2>
+          <h2 @click="tiaozhuan(e)"><a>{{e.name}}</a></h2>
           <p style="color:#888;">
             {{e.alias}}
           </p>
@@ -59,7 +59,7 @@
           next-text="下一页　>"
           @current-change="handleCurrentChange"
           :current-page="page"
-          :page-size="$store.state.hotel.hotelList.data.length"
+          :page-size="10"
         >
         </el-pagination>
       </el-row>
@@ -76,21 +76,15 @@ export default {
         }
     },
     mounted () {
-      this.$axios({
-        url:'cities',
-        params:{
-          name:this.$route.query.cityName
-        }
-      }).then(res=>{
-        let { id } = res.data.data[0];
-        this.$axios({
+        setTimeout(() => {
+          this.$axios({
             url: "/hotels",
-            params: { city: id }
+            params: { city:this.$store.state.hotel.cityId }
           }).then(res => {
             // console.log(res)
             this.totalpage=res.data.total
           });
-      })
+        }, 0);
     },
     methods: {
       //页面改变时候触发
@@ -107,9 +101,13 @@ export default {
           }
         }).then(res=>{
           // console.log(res);
+          // this.totalpage= this.$store.state.hotelList.total;
           this.$store.commit('hotel/setHotelList',res.data)
         })
-      }
+      },
+      tiaozhuan(e){
+      this.$router.replace('hotel/hotelDetail/?id='+e.id)
+    }
     }
 };
 </script>
@@ -188,5 +186,8 @@ export default {
   /deep/.el-pager {
     font-weight: normal;
   }
+}
+a{
+  cursor: pointer;
 }
 </style>
