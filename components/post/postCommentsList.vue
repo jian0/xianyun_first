@@ -18,6 +18,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      commentsData: [] //评论列表
+    };
+  },
   mounted() {
     let id = 4;
     // 获取评论列表

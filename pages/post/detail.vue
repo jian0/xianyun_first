@@ -18,27 +18,17 @@
           </div>
           <!-- 文章内容 -->
           <div class="post-content" v-html="detailData.content"></div>
+
           <!-- 文章操作 -->
-          <div class="post-ctrl">
-            <el-row type="flex" justify="center">
-              <el-col class="post-item">
-                <i class="el-icon-edit-outline icon"></i>
-                <p>评论</p>
-              </el-col>
-              <el-col class="post-item">
-                <div class="post-item" @click="open">
-                  <i class="el-icon-share icon"></i>
-                  <p>分享</p>
-                </div>
-              </el-col>
-            </el-row>
-          </div>
+          <postListCtrl></postListCtrl>
+
           <!-- 评论文章  -->
           <postComments></postComments>
 
           <!-- 评论列表 -->
           <postCommentsList></postCommentsList>
         </div>
+
         <!-- 分页 -->
         <el-row type="flex" justify="center" class="page">
           <el-pagination
@@ -52,6 +42,7 @@
           ></el-pagination>
         </el-row>
       </el-col>
+
       <!-- 侧边栏 -->
       <postDetailAside></postDetailAside>
     </el-row>
@@ -62,11 +53,13 @@
 import postComments from "@/components/post/postComments";
 import postCommentsList from "@/components/post/postCommentsList";
 import postDetailAside from "@/components/post/postDetailAside";
+import postListCtrl from "@/components/post/postListCtrl";
 export default {
   components: {
     postComments,
     postCommentsList,
-    postDetailAside
+    postDetailAside,
+    postListCtrl
   },
   data() {
     return {
@@ -74,9 +67,6 @@ export default {
       indexPage: 5,
       //   文章详情数据
       detailData: [],
-      //   侧边栏数据
-      // asideData: [],
-      commentsData: [] //评论列表
     };
   },
   methods: {
@@ -86,14 +76,6 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-    },
-    // 点击分享按钮时触发
-    open() {
-      this.$message({
-        showClose: true,
-        message: "警告哦，这是一条警告消息",
-        type: "warning"
-      });
     }
   },
   mounted() {
@@ -135,25 +117,6 @@ export default {
   /deep/.post-content {
     img {
       max-width: 700px !important;
-    }
-  }
-  .post-ctrl {
-    padding: 50px 0 30px;
-    .post-item {
-      margin: 0 20px;
-      font-size: 20px;
-      text-align: center;
-      cursor: pointer;
-      p {
-        margin-top: 5px;
-        font-size: 14px;
-        color: #999;
-      }
-    }
-    .icon {
-      display: block;
-      font-size: 28px;
-      color: orange;
     }
   }
   .page {
