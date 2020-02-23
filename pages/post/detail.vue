@@ -23,10 +23,10 @@
           <postListCtrl></postListCtrl>
 
           <!-- 评论文章  -->
-          <postComments></postComments>
+          <postComments @pullSuccess="handleSuccess"></postComments>
 
           <!-- 评论列表 -->
-          <postCommentsList v-for="(item,index) in commentsData" :key="index" :data='item'></postCommentsList>
+          <postCommentsList v-for="(item,index) in commentsData" :key="index" :data="item"></postCommentsList>
         </div>
 
         <!-- 分页 -->
@@ -36,15 +36,15 @@
             @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-sizes="[5, 10, 15, 20]"
-            :page-size="5"
+            :page-size="indexPage"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="100"
+            :total="total"
           ></el-pagination>
         </el-row>
       </el-col>
 
       <!-- 侧边栏 -->
-      <postDetailAside></postDetailAside>
+      <postDetailAside @handleJump="handleJump1"></postDetailAside>
     </el-row>
   </div>
 </template>
@@ -65,20 +65,22 @@ export default {
   },
   data() {
     return {
-      currentPage: 1,
-      indexPage: 5,
+      total: 50, //总数量
+      currentPage: 1, //当前页
+      indexPage: 5, //显示的条数
       detailData: [], // 文章详情数据
-      commentsData: [] //评论数据
+      commentsData: [], //评论数据
+      start: 0 //开始的数据
     };
   },
   methods: {
     // 获取文章详情信息
-    getData() {
-      let id = this.$route.query.id;
+    getData(id) {
+      // let id = this.$route.query.id;
       // 获取文章详情信息
       this.$axios({
         url: "/posts",
-        id: id
+        params: { id }
       }).then(res => {
         // console.log(res);
         this.detailData = res.data.data[0];
@@ -93,24 +95,37 @@ export default {
         params: {
           post: id,
           _limit: this.indexPage,
-          _start: 0
+          _start: this.start
         }
       }).then(res => {
-        console.log(res);
+        // console.log(res);
         this.commentsData = res.data.data;
       });
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      // console.log(`每页 ${val} 条`);
       this.indexPage = val;
+      this.getComments();
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      this.currentPage = val;
+      this.start = this.indexPage * (this.currentPage - 1);
+      this.getComments();
+    },
+    handleSuccess() {
+      this.getComments();
+    },
+    handleJump1() {
+      let id = this.$route.query.id;
+      console.log(id);
+      this.getData(id);
     }
   },
   mounted() {
+    let id = this.$route.query.id;
     // 获取页面数据
-    this.getData();
+    this.getData(id);
 
     // 获取评论数据
     this.getComments();

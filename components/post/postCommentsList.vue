@@ -85,11 +85,10 @@ export default {
   .cmt-message {
     margin-top: 10px;
     .cmt-pic {
-      width: 80px;
-      height: 80px;
       img {
-        width: 100%;
-        height: 100%;
+        margin-right: 5px;
+        width: 80px;
+        height: 80px;
       }
     }
   }
