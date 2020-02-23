@@ -5,15 +5,15 @@
         <div class="grid-content bg-purple">
           <!-- 面包屑 -->
           <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">旅游攻略</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/post' }">旅游攻略</el-breadcrumb-item>
             <el-breadcrumb-item>攻略详情</el-breadcrumb-item>
           </el-breadcrumb>
           <!-- 大标题 -->
           <h1>{{detailData.title}}</h1>
           <hr />
-          <!-- 文章信息   {{detailData.city.created_at}}-->
+          <!-- 文章信息 -->
           <div class="post-info">
-            <span>攻略：2019-05-22 10:57</span>
+            <span>攻略：{{detailData.created_at | formatDate}}</span>
             <span>阅读：{{detailData.watch}}</span>
           </div>
           <!-- 文章内容 -->
@@ -26,7 +26,7 @@
           <postComments></postComments>
 
           <!-- 评论列表 -->
-          <postCommentsList></postCommentsList>
+          <postCommentsList v-for="(item,index) in commentsData" :key="index" :data='item'></postCommentsList>
         </div>
 
         <!-- 分页 -->
@@ -54,6 +54,8 @@ import postComments from "@/components/post/postComments";
 import postCommentsList from "@/components/post/postCommentsList";
 import postDetailAside from "@/components/post/postDetailAside";
 import postListCtrl from "@/components/post/postListCtrl";
+import moment from "moment";
+
 export default {
   components: {
     postComments,
@@ -65,11 +67,39 @@ export default {
     return {
       currentPage: 1,
       indexPage: 5,
-      //   文章详情数据
-      detailData: [],
+      detailData: [], // 文章详情数据
+      commentsData: [] //评论数据
     };
   },
   methods: {
+    // 获取文章详情信息
+    getData() {
+      let id = this.$route.query.id;
+      // 获取文章详情信息
+      this.$axios({
+        url: "/posts",
+        id: id
+      }).then(res => {
+        // console.log(res);
+        this.detailData = res.data.data[0];
+      });
+    },
+    // 获取评论数据
+    getComments() {
+      let id = this.$route.query.id;
+      // 获取评论列表
+      this.$axios({
+        url: "/posts/comments",
+        params: {
+          post: id,
+          _limit: this.indexPage,
+          _start: 0
+        }
+      }).then(res => {
+        console.log(res);
+        this.commentsData = res.data.data;
+      });
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.indexPage = val;
@@ -79,17 +109,16 @@ export default {
     }
   },
   mounted() {
-    let id = 4;
-    // 获取文章详情信息
-    this.$axios({
-      url: "/posts",
-      id: id
-    }).then(res => {
-      //   console.log(res);
-      this.detailData = res.data.data[0];
-      // console.log(this.detailData[0].title);
-      // console.log(this.detailData.city.created_at);
-    });
+    // 获取页面数据
+    this.getData();
+
+    // 获取评论数据
+    this.getComments();
+  },
+  filters: {
+    formatDate: function(value) {
+      return moment(value).format("YYYY-MM-DD hh:mm:ss");
+    }
   }
 };
 </script>

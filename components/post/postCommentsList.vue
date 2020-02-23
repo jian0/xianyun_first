@@ -1,15 +1,31 @@
 <template>
+  <!-- 评论列表 -->
   <div class="cmt-list">
     <div class="cmt-item">
       <div class="cmt-info">
-        <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt />
-        地球发动机
-        <i>2020-02-20 9:14</i>
-        <span>1</span>
+        <img :src="`${$axios.defaults.baseURL}${data.account.defaultAvatar}`" alt />
+        {{data.account.nickname}}
+        <i>{{data.created_at | formatDate}}</i>
+        <span>{{data.level}}</span>
       </div>
+      <commentsItem v-if="data.parent" :data="data.parent"></commentsItem>
+
       <div class="cmt-content">
         <div class="cmt-new">
-          <div class="cmt-message">first</div>
+          <div class="cmt-message">
+            <p>{{data.content}}</p>
+            <div class="cmt-pic" v-if="data.pics">
+              <img
+                v-for="(item,index) in data.pics"
+                :key="index"
+                :src="`${$axios.defaults.baseURL}${item.url}`"
+                alt
+              />
+            </div>
+          </div>
+          <div class="cmt-ctrl">
+            <a href="javascript:;" class="active" @click="handleClick(data)">回复</a>
+          </div>
         </div>
       </div>
     </div>
@@ -17,26 +33,28 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
-  data() {
-    return {
-      commentsData: [] //评论列表
-    };
+  name: "commentsItem",
+  props: {
+    data: {
+      type: Object,
+      default: {}
+    }
   },
-  mounted() {
-    let id = 4;
-    // 获取评论列表
-    this.$axios({
-      url: "/posts/comments",
-      params: {
-        post: id,
-        _limit: this.indexPage,
-        _start: 0
-      }
-    }).then(res => {
-      console.log(res);
-      this.commentsData = res.data.data;
-    });
+  data() {
+    return {};
+  },
+  filters: {
+    formatDate: function(value) {
+      return moment(value).format("YYYY-MM-DD hh:mm:ss");
+    }
+  },
+  methods: {
+    handleClick(data) {
+      // 保存数据到store
+      this.$store.commit('post/getFollowInfo',data)
+    }
   }
 };
 </script>
@@ -44,27 +62,52 @@ export default {
 <style scoped lang='less'>
 .cmt-list {
   border: 1px solid #ddd;
-  .cmt-item {
-    border-bottom: 1px dashed #ddd;
-    padding: 20px 20px 5px;
-    .cmt-info {
-      margin-bottom: 10px;
-      font-size: 12px;
-      color: #666;
+}
+.cmt-item {
+  border-bottom: 1px dashed #ddd;
+  padding: 20px 20px 5px;
+  .cmt-info {
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #666;
+    img {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+    i {
+      color: #999;
+    }
+    span {
+      float: right;
+    }
+  }
+  .cmt-message {
+    margin-top: 10px;
+    .cmt-pic {
+      width: 80px;
+      height: 80px;
       img {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-      }
-      i {
-        color: #999;
-      }
-      span {
-        float: right;
+        width: 100%;
+        height: 100%;
       }
     }
-    .cmt-message {
-      margin-top: 10px;
+  }
+
+  .cmt-content {
+    .cmt-ctrl {
+      height: 20px;
+      line-height: 20px;
+      text-align: right;
+      font-size: 12px;
+      color: #1e50a2;
+      // opacity: 0;
+    }
+
+    &:hover {
+      .cmt-new > .active {
+        opacity: 1;
+      }
     }
   }
 }
