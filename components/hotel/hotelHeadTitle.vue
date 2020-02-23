@@ -1,20 +1,23 @@
 <template>
-   <div class="hotel-head">
+   <div class="hotel-head" >
+     <div v-for="(item,index) in titleData" :key="index">
           <div class="main-title">
-            <h4>锦江之星(吴泾店)</h4>
+            <h4>{{item.name}}</h4>
           </div>
           <div class="en-title">
-            <span>jin jiang zhi xing (shang hai min hang wu jing dian)</span>
+            <span>{{item.alias}}</span>
           </div>
           <div class="location">
             <i class="iconfont iconlocation"></i>
-            <span>剑川路165号(近龙吴路)</span>
+            <span>{{item.address}}</span>
+          </div>
           </div>
         </div>
 </template>
 
 <script>
 export default {
+  props:['titleData']
 
 }
 </script>

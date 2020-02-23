@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="top-info">
-      <HotelInfoHead></HotelInfoHead>
+      <HotelInfoHead :data="hotelData"></HotelInfoHead>
       <div class="hotel-introduce">
-        <HotelHeadTitle></HotelHeadTitle>
+        <HotelHeadTitle :titleData='hotelData'></HotelHeadTitle>
         <div class="intro-img">
           <el-row type="flex" justify="space-between">
             <el-col :span="16">
@@ -38,11 +38,11 @@
           </el-row>
         </div>
         <!-- 酒店价格来源 -->
-        <HotelInfoIntro></HotelInfoIntro>
-        <HotelMap></HotelMap>
-        <RoomInfo></RoomInfo>
+        <HotelInfoIntro :hotelInfoData='hotelData'></HotelInfoIntro>
+        <HotelMap :mapData='hotelData'></HotelMap>
+        <RoomInfo :roomInfo='hotelData'></RoomInfo>
       </div>
-      <HotelComment></HotelComment>
+      <HotelComment :commentData='hotelData'></HotelComment>
     </div>
   </div>
 </template>
@@ -56,6 +56,11 @@ import HotelMap from "@/components/hotel/map";
 import RoomInfo from "@/components/hotel/roomInfo";
 import HotelComment from "@/components/hotel/hotelComment";
 export default {
+  data() {
+    return {
+      hotelData:{}
+    };
+  },
   components: {
     HotelInfoIntro,
     HotelInfoHead,
@@ -63,6 +68,21 @@ export default {
     HotelMap,
     RoomInfo,
     HotelComment
+  },
+  mounted() {
+    this.$router.push({
+      path: "/hotel/hotelDetail",
+      query: { id: 185 }
+    });
+    console.log(this.$route.query.id);
+    this.$axios({
+      method: "get",
+      url: "/hotels?id=" + this.$route.query.id
+    }).then(res => {
+      // console.log(res);
+      this.hotelData = res.data.data;
+      console.log(this.hotelData)
+    });
   }
 };
 </script>

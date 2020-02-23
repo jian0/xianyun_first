@@ -137,7 +137,9 @@ export default {
                 params: this.$route.query
             }).then(res => {
                 // 总数据
+                console.log(res)
                 this.flightsData = res.data;
+                // console.log(this.flightsData )
                 // 备份一下数据, 注意res.data需要拷贝一份出来
                 this.cacheFlightsData = {...res.data};
                 
