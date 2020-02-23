@@ -5,10 +5,10 @@
     <div class="hotel" v-for="(e,i) in $store.state.hotel.hotelList.data" :key="i">
       <el-row type="flex" :gutter="10" class="hotel-bottom">
         <el-col :span="8">
-          <a href="#" class="pic"><img :src="e.photos" alt=""/></a>
+          <nuxt-link :to="{path:'/hotel/hotelDetail',query:{id:e.id}}" class="pic"><img :src="e.photos" alt=""/></nuxt-link>
         </el-col>
         <el-col :span="10" class="title">
-          <h2><nuxt-link to='#'>{{e.name}}</nuxt-link></h2>
+          <h2><nuxt-link :to="{path:'/hotel/hotelDetail',query:{id:e.id}}">{{e.name}}</nuxt-link></h2>
           <p style="color:#888;">
             {{e.alias}}
           </p>
