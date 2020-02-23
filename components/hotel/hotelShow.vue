@@ -8,7 +8,7 @@
           <a href="#" class="pic"><img :src="e.photos" alt=""/></a>
         </el-col>
         <el-col :span="10" class="title">
-          <h2>{{e.name}}</h2>
+          <h2><nuxt-link to='#'>{{e.name}}</nuxt-link></h2>
           <p style="color:#888;">
             {{e.alias}}
           </p>
@@ -27,7 +27,7 @@
             <el-col :span="7"> <span class="yellow">{{e.very_good_remarks}} </span>篇周游记 </el-col>
           </el-row>
           <i class="el-icon-location"></i
-          ><span style="font-size:14px">位于: 剑川路165号(近龙吴路)</span>
+          ><span style="font-size:14px">位于: {{e.address}}</span>
         </el-col>
         <el-col :span="6">
           <ul class="togo">
@@ -54,11 +54,11 @@
       <el-row type="flex" justify="end">
         <el-pagination
           layout="prev, pager, next"
-          :total="$store.state.hotel.hotelList.total"
+          :total="totalpage"
           prev-text="<　上一页"
           next-text="下一页　>"
           @current-change="handleCurrentChange"
-          :current-page="1"
+          :current-page="page"
           :page-size="$store.state.hotel.hotelList.data.length"
         >
         </el-pagination>
@@ -71,13 +71,44 @@
 export default {
     data () {
         return {
-            
+            page:1,
+            totalpage:1,
         }
+    },
+    mounted () {
+      this.$axios({
+        url:'cities',
+        params:{
+          name:this.$route.query.cityName
+        }
+      }).then(res=>{
+        let { id } = res.data.data[0];
+        this.$axios({
+            url: "/hotels",
+            params: { city: id }
+          }).then(res => {
+            // console.log(res)
+            this.totalpage=res.data.total
+          });
+      })
     },
     methods: {
       //页面改变时候触发
-      handleCurrentChange(){
-
+      handleCurrentChange(value){
+        // console.log(value)
+        this.page=value;
+        this.$router.push({path:'/hotel',query:{page:this.page}})
+        //后面还有其他参数要传的，现在先定死
+        this.$axios({
+          url:'/hotels',
+          params:{
+            city:this.$store.state.hotel.cityId,
+            _start:this.$store.state.hotel.hotelList.nextStart,
+          }
+        }).then(res=>{
+          // console.log(res);
+          this.$store.commit('hotel/setHotelList',res.data)
+        })
       }
     }
 };

@@ -37,7 +37,7 @@
                 <div class="expensive">
                   <i class="iconfont iconhuangguan yellow" v-for="e in 5" :key="e"></i>
                   <el-tooltip content="等级评定是针对房价，设施和服务等各方面水平的综合评估。(顶呱呱型)" placement="bottom">
-                    <span>¥332</span>
+                    <span>¥768</span>
                   </el-tooltip>
                 </div>
               </el-row>
@@ -147,6 +147,9 @@ export default {
   },
   methods: {
     showhotel(){
+          var map = new AMap.Map("container", {
+            resizeEnable: true,
+        });
           var markerList= [];
           var marker;
           var center_lng=0;
@@ -161,6 +164,7 @@ export default {
               position: new AMap.LngLat(e.location.longitude, e.location.latitude), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
               title: e.name,
               content:`<div style='position: relative;'><img src='//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png' style='width:30px'><span style='position: absolute;top:3px;left:9px;color:#fff;font-size=16px'>${i+1}</span></div>`
+              
             });
             markerList.push(marker)
           });

@@ -16,7 +16,7 @@
         <el-col :span="5" class="level">
           <el-row type="flex" justify="center">住宿等级</el-row>
           <el-row style="margin-top:13px;">
-            <el-dropdown style="width:100%;" @command="chooselevel">
+            <el-dropdown style="width:100%;" @command="chooselevel" >
               <span class="el-dropdown-link" style="display:block;width:100%;">
                 <el-row type="flex" justify="space-between">
                   不限<i class="el-icon-arrow-down el-icon--right"></i>
@@ -24,8 +24,8 @@
               </span>
               <el-dropdown-menu slot="dropdown"
                 ><!--下拉 -->
-                <el-dropdown-item v-for="(e,i) in levels" :key="i" :command='i+1' icon="el-icon-check" style="width:150px" :class="{active:flag}">{{e.name}}</el-dropdown-item
-                >
+                <div v-for="(e,i) in levels" :key="i"><el-dropdown-item  :command='i' icon="el-icon-check" style="width:150px" :class="{active:levels_num===i}">{{e.name}}</el-dropdown-item
+                ></div>
               </el-dropdown-menu>
             </el-dropdown>
           </el-row>
@@ -103,7 +103,7 @@ export default {
       assets:[],
       brands:[],
       money:4000,
-      flag:false,
+      levels_num:'',
     }
   },
   mounted () {
@@ -129,15 +129,18 @@ export default {
           price_lt:value,
         }
       }).then(res=>{
-        console.log(res);
-        //注意的是现在没有实现页面路由变化还有就是酒店的数据传递
+        // console.log(res);
+        //注意的是现在没有实现页面路由变化
         //文档中参数有问题，要和线上的对比一下
+        this.$store.commit('hotel/setHotelList',res.data)
       })
     },
     //选择level
     chooselevel(value){
-      this.flag= !this.flag;
+      this.levels_num= value
       console.log(value);
+      // console.log(tabindex);
+
     }
   }
 };
