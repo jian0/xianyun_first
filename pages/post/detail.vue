@@ -23,10 +23,10 @@
           <postListCtrl></postListCtrl>
 
           <!-- 评论文章  -->
-          <postComments></postComments>
+          <postComments @pullSuccess="handleSuccess"></postComments>
 
           <!-- 评论列表 -->
-          <postCommentsList v-for="(item,index) in commentsData" :key="index" :data='item'></postCommentsList>
+          <postCommentsList v-for="(item,index) in commentsData" :key="index" :data="item"></postCommentsList>
         </div>
 
         <!-- 分页 -->
@@ -106,6 +106,9 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+    },
+    handleSuccess() {
+      this.getComments()
     }
   },
   mounted() {
