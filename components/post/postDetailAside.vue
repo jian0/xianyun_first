@@ -1,4 +1,5 @@
 <template>
+  <!-- 攻略详情侧边栏 -->
   <el-col class="aside">
     <div class="grid-content bg-purple">
       <h4 class="aside-title">相关攻略</h4>
