@@ -1,13 +1,19 @@
 <template>
-  <div class="menu">
-     <div v-for="(item,index) in menuList" :key="index">
-      <p class="left" >{{item.type}} <i class="el-icon-arrow-right"></i></p>
-      <!-- <div v-for='(value,index1) in item.children' :key="index1" class="show">
-         <p ><i>{{index1 + 1}}</i><span>{{value.city}}</span> {{value.desc}}</p>
-      </div> -->
-      <div class="show"></div>
+  <div class="cent" @mouseleave="handleOut">
+    <!-- 左侧菜单栏 -->
+     <div  class="menu">
+      <p class="left" v-for="(item,index) in menuList" :key="index" @mouseenter="handleEnter(index)">{{item.type}} <i class="el-icon-arrow-right" ></i></p>
      </div>
-    
+    <!-- 右侧详情展示 -->
+    <div class="right" v-if ="current !== false" >
+     <ul>
+       <li v-for="(value,index) in menuList[current].children" :key="index">
+         <span class="num">{{index + 1}}</span>
+         <span class='city' @click='giveCityId(value)'>{{value.city}}</span>
+         <i class="desc">{{value.desc}}</i>
+       </li>
+     </ul>
+    </div>
   </div>
 </template>
 
@@ -17,8 +23,10 @@ export default {
      return {
         //  储存菜单数据
         menuList : [],
-        // 控制弹框的显示与隐藏
-        current : false
+        // 记录储存当前id
+        current : false,
+        // 储存点击的城市id
+        cId : null
      }
  },
   mounted(){
@@ -30,51 +38,95 @@ export default {
       })
   },
   methods : {
-      handle(index){
-          let show = document.querySelector('.show');
-          show.style.display = 'block';
-      },
-      handleHide(){
-          let show = document.querySelector('.show');
-          show.style.display = 'none';
-      }
+    // 鼠标移入事件
+     handleEnter(index){
+       this.current = index;
+     },
+    //  鼠标移出事件
+     handleOut(){
+     this.current = false;
+     },
+    // 点击菜单栏城市获取城市id
+     giveCityId(data){
+      //  console.log(data.city)
+      this.$axios({
+        url : '/cities',
+        params : {
+          name : data.city
+        }
+      }).then(res =>{
+        this.cId = res.data.data[0].id;
+        this.$emit('giveId',this.cId);
+      })
+     }
   }
 }
 </script>
 
 <style scoped lang='less'>
- .menu {
-     position: relative;
-     box-sizing: border-box;
-     border: 1px solid #ccc;
-     border-bottom: 0;
-    // width: 100%;
+ .cent {
+    margin: 0;
+    padding: 0;
+   position: relative;
+    .menu {
+    border-bottom: 1px solid #ccc;
+    width: 250px;
+    }
      .left {
+       position: relative;
+       z-index: 9999;
        padding: 0 15px;
        font-size: 15px;
        height: 40px;
        line-height: 40px;
-       border-bottom: 1px solid #ccc;
+       border: 1px solid #ccc;
+       border-bottom: none;
        cursor: pointer;
        &:hover {
          color: orange;
-         border-right: none;
+         border-right: 1px solid #fff;
        }
        >i {
          margin-top: 10px;
          float: right;
      }
      }
-     .show {
-     display: none;
-     background-color: #ccc;
-     width: 300px;
+     .right {
+     background-color: #fff;
+     border: 1px solid #ccc;
+     width: 320px;
      height: 200px;
      position: absolute;
+     z-index: 9;
      top: 0;
-     right: -300px;
-     p {
+     left : 249.55px;
+     li {
          height: 40px;
+         line-height: 40px;
+         padding-left: 6px;
+         .num {
+           color: orange;
+           font-size: 20px;
+           font-style: italic;
+           margin-right: 8px;
+         }
+         .city {
+           font-size: 16px;
+           color: orange;
+           margin-right: 5px;
+           &:hover{
+            text-decoration: underline;
+            cursor: pointer;
+           }
+         }
+         .desc {
+           font-size: 15px;
+           color: #666;
+            &:hover{
+            cursor: pointer;
+            text-decoration: underline;
+           }
+         }
      }
      }
  }

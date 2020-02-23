@@ -2,71 +2,47 @@
   <div class="hotelShow">
     <!-- 酒店介绍 -->
     <!-- 如果没有获取到数据就显示着没有数据 -->
-    <div class="hotel">
+    <div class="hotel" v-for="(e,i) in $store.state.hotel.hotelList.data" :key="i">
       <el-row type="flex" :gutter="10" class="hotel-bottom">
         <el-col :span="8">
-          <a href="#" class="pic"><img src="/hotel.jpg" alt=""/></a>
+          <a href="#" class="pic"><img :src="e.photos" alt=""/></a>
         </el-col>
         <el-col :span="10" class="title">
-          <h2>锦江之星(吴泾店)</h2>
+          <h2><nuxt-link to='#'>{{e.name}}</nuxt-link></h2>
           <p style="color:#888;">
-            jin jiang zhi xing (shang hai min hang wu jing dian)
+            {{e.alias}}
           </p>
           <el-row type="flex">
             <el-col :span="10">
               <el-rate
-                v-model="fen"
+                v-model="e.stars"
                 disabled
                 show-score
                 text-color="#ff9900"
-                :score-template="fen + '分'"
+                :score-template="e.stars + '分'"
               >
               </el-rate>
             </el-col>
-            <el-col :span="7"> <span class="yellow">38 </span>条评价 </el-col>
-            <el-col :span="7"> <span class="yellow">20 </span>篇周游记 </el-col>
+            <el-col :span="7"> <span class="yellow">{{e.common_remarks}} </span>条评价 </el-col>
+            <el-col :span="7"> <span class="yellow">{{e.very_good_remarks}} </span>篇周游记 </el-col>
           </el-row>
           <i class="el-icon-location"></i
-          ><span style="font-size:14px">位于: 剑川路165号(近龙吴路)</span>
+          ><span style="font-size:14px">位于: {{e.address}}</span>
         </el-col>
         <el-col :span="6">
           <ul class="togo">
-            <li>
+            <li v-for="(e,i) in e.products" :key="i">
               <a
                 href="https://hotels.ctrip.com/hotel/694679.html"
                 target="_blank"
               >
                 <el-row type="flex" justify="space-between">
-                  携程
+                  {{e.name}}
                   <span
-                    ><i class="yellow">¥199</i>起 <i class="el-icon-right"></i
+                    ><i class="yellow">¥{{e.price}}</i>起 <i class="el-icon-right"></i
                   ></span>
                 </el-row>
               </a>
-            </li>
-            <li>
-              <a
-                href="https://hotels.ctrip.com/hotel/694679.html"
-                target="_blank"
-              >
-                <el-row type="flex" justify="space-between">
-                  艺龙
-                  <span
-                    ><i class="yellow">¥238</i>起 <i class="el-icon-right"></i
-                  ></span> </el-row
-              ></a>
-            </li>
-            <li>
-              <a
-                href="https://hotels.ctrip.com/hotel/694679.html"
-                target="_blank"
-              >
-                <el-row type="flex" justify="space-between">
-                  携程
-                  <span
-                    ><i class="yellow">¥211</i>起 <i class="el-icon-right"></i
-                  ></span> </el-row
-              ></a>
             </li>
           </ul>
         </el-col>
@@ -78,9 +54,12 @@
       <el-row type="flex" justify="end">
         <el-pagination
           layout="prev, pager, next"
-          :total="50"
+          :total="totalpage"
           prev-text="<　上一页"
           next-text="下一页　>"
+          @current-change="handleCurrentChange"
+          :current-page="page"
+          :page-size="$store.state.hotel.hotelList.data.length"
         >
         </el-pagination>
       </el-row>
@@ -92,8 +71,45 @@
 export default {
     data () {
         return {
-            fen:3
+            page:1,
+            totalpage:1,
         }
+    },
+    mounted () {
+      this.$axios({
+        url:'cities',
+        params:{
+          name:this.$route.query.cityName
+        }
+      }).then(res=>{
+        let { id } = res.data.data[0];
+        this.$axios({
+            url: "/hotels",
+            params: { city: id }
+          }).then(res => {
+            // console.log(res)
+            this.totalpage=res.data.total
+          });
+      })
+    },
+    methods: {
+      //页面改变时候触发
+      handleCurrentChange(value){
+        // console.log(value)
+        this.page=value;
+        this.$router.push({path:'/hotel',query:{page:this.page}})
+        //后面还有其他参数要传的，现在先定死
+        this.$axios({
+          url:'/hotels',
+          params:{
+            city:this.$store.state.hotel.cityId,
+            _start:this.$store.state.hotel.hotelList.nextStart,
+          }
+        }).then(res=>{
+          // console.log(res);
+          this.$store.commit('hotel/setHotelList',res.data)
+        })
+      }
     }
 };
 </script>
