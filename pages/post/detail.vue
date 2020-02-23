@@ -44,7 +44,7 @@
       </el-col>
 
       <!-- 侧边栏 -->
-      <postDetailAside></postDetailAside>
+      <postDetailAside @handleJump="handleJump1"></postDetailAside>
     </el-row>
   </div>
 </template>
@@ -65,22 +65,22 @@ export default {
   },
   data() {
     return {
-      total:50, //总数量
+      total: 50, //总数量
       currentPage: 1, //当前页
-      indexPage: 5,  //显示的条数
+      indexPage: 5, //显示的条数
       detailData: [], // 文章详情数据
       commentsData: [], //评论数据
-      start: 0  //开始的数据
+      start: 0 //开始的数据
     };
   },
   methods: {
     // 获取文章详情信息
-    getData() {
-      let id = this.$route.query.id;
+    getData(id) {
+      // let id = this.$route.query.id;
       // 获取文章详情信息
       this.$axios({
         url: "/posts",
-        id: id
+        params: { id }
       }).then(res => {
         // console.log(res);
         this.detailData = res.data.data[0];
@@ -105,21 +105,27 @@ export default {
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
       this.indexPage = val;
-      this.getComments()
+      this.getComments();
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-      this.currentPage = val
-      this.start = this.indexPage * (this.currentPage - 1)
-      this.getComments()
+      this.currentPage = val;
+      this.start = this.indexPage * (this.currentPage - 1);
+      this.getComments();
     },
     handleSuccess() {
-      this.getComments()
+      this.getComments();
+    },
+    handleJump1() {
+      let id = this.$route.query.id;
+      console.log(id);
+      this.getData(id);
     }
   },
   mounted() {
+    let id = this.$route.query.id;
     // 获取页面数据
-    this.getData();
+    this.getData(id);
 
     // 获取评论数据
     this.getComments();
