@@ -24,10 +24,9 @@
               </span>
               <el-dropdown-menu slot="dropdown"
                 ><!--下拉 -->
-                <el-dropdown-item v-for="(e,i) in levels" :key="i" :command='i+1'><el-checkbox style="width:150px"
-                    >{{e.name}}</el-checkbox
-                  ></el-dropdown-item
-                >
+                <el-checkbox v-for="(e,i) in levels" :key="i" style="display:block;width:140px;margin-left:8px"><el-dropdown-item  :command='i+1' style="width:90px">{{e.name}}
+                </el-dropdown-item
+                ></el-checkbox>
               </el-dropdown-menu>
             </el-dropdown>
           </el-row>
@@ -42,10 +41,9 @@
                 </el-row>
               </span>
               <el-dropdown-menu slot="dropdown"><!--下拉 -->
-                <el-dropdown-item v-for="(e,i) in types" :key="i"><el-checkbox style="width:150px"
-                    >{{e.name}}</el-checkbox
-                  ></el-dropdown-item
-                >
+                <el-checkbox v-for="(e,i) in types" :key="i" style="display:block;width:140px;margin-left:8px"><el-dropdown-item style="width:90px">{{e.name}}
+                </el-dropdown-item
+                ></el-checkbox>
                 
               </el-dropdown-menu>
             </el-dropdown>
@@ -62,10 +60,9 @@
               </span>
               <el-dropdown-menu slot="dropdown"
                 ><!--下拉 -->
-                <el-dropdown-item v-for="(e,i) in assets" :key="i"><el-checkbox style="width:150px"
-                    >{{e.name}}</el-checkbox
-                  ></el-dropdown-item
-                >
+                <el-checkbox v-for="(e,i) in assets" :key="i" style="display:block;width:140px;margin-left:8px"><el-dropdown-item style="width:90px">{{e.name}}
+                </el-dropdown-item
+                ></el-checkbox>
               </el-dropdown-menu>
             </el-dropdown>
           </el-row>
@@ -76,17 +73,16 @@
             <el-dropdown style="width:100%;">
               <span class="el-dropdown-link" style="display:block;width:100%;">
                 <el-row type="flex" justify="space-between">
-                  不限<i class="el-icon-arrow-down el-icon--right"></i>
+                  {{levels_value}}<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-row>
               </span>
               <el-dropdown-menu
                 slot="dropdown"
                 style="overflow:auto;height:200px"
                 ><!--下拉 -->
-                <el-dropdown-item v-for="(e,i) in brands" :key="i"><el-checkbox style="width:120px"
-                    >{{e.name}}</el-checkbox
-                  ></el-dropdown-item
-                >
+                <el-checkbox v-for="(e,i) in brands" :key="i" style="display:block;width:110px;margin-left:8px"><el-dropdown-item  style="width:70px">{{e.name}}
+                </el-dropdown-item
+                ></el-checkbox>
               </el-dropdown-menu>
             </el-dropdown>
           </el-row>
@@ -106,6 +102,8 @@ export default {
       brands:[],
       money:4000,
       levels_num:'',
+      levelschoose:[],
+      levels_value:'不限'
     }
   },
   mounted () {
@@ -134,15 +132,27 @@ export default {
         // console.log(res);
         //注意的是现在没有实现页面路由变化
         //文档中参数有问题，要和线上的对比一下
+        console.log(res);
         this.$store.commit('hotel/setHotelList',res.data)
       })
     },
     //选择level
     chooselevel(value){
-      this.levels_num= value
-      console.log(value);
-      // console.log(tabindex);
-
+      // console.log(value);
+      let suoyin =this.levelschoose.indexOf(value)
+      if(suoyin==-1){
+        this.levelschoose.push(value);
+      }else {
+        this.levelschoose.splice(suoyin,1)
+      }
+      console.log(this.levelschoose.length)
+      if(this.levelschoose.length==1) {
+        this.levels_value=value +' 星'
+      }else{
+        this.levels_value=`已选${this.levelschoose.length}项`
+      }
+    console.log(this.levelschoose)
+    console.log(this.levels_value)
     }
   }
 };

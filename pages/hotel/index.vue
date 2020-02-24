@@ -47,18 +47,40 @@ export default {
   watch: {
     $route(){
       //路径参数变化时候也要获取到相应数据
-      this.init();
-    }
-  },
-  methods: {
-    init() {
-      if (this.$route.query) {
+      setTimeout(() => {
+          if (this.$route.query.cityName) {
         this.$axios({
           url: "/cities",
           params: { name: this.$route.query.cityName }
         }).then(res => {
           // console.log(res);
-          let { id } = res.data.data[0];
+          let id  = res.data.data[0].id;
+          this.$store.commit('hotel/setOneCity',res.data.data[0]);
+          this.$store.commit('hotel/setCityId',id);
+          this.$axios({
+            url: "/hotels",
+            params: { city:  this.$store.state.hotel.cityId  }
+          }).then(res => {
+            // console.log(res)
+          this.$store.commit('hotel/setHotelList',res.data);
+          });
+        });
+      }
+        }, 0);
+    }
+  },
+  methods: {
+    init() {
+      
+      // console.log(this.$route.query)
+        setTimeout(() => {
+          if (this.$route.query.cityName) {
+        this.$axios({
+          url: "/cities",
+          params: { name: this.$route.query.cityName }
+        }).then(res => {
+          // console.log(res);
+          let id  = res.data.data[0].id;
           this.$store.commit('hotel/setOneCity',res.data.data[0]);
           this.$store.commit('hotel/setCityId',id);
           this.$axios({
@@ -68,9 +90,9 @@ export default {
             // console.log(res)
           this.$store.commit('hotel/setHotelList',res.data);
           });
-          // console.log(id)
         });
       }
+        }, 0);
     }
   }
 };

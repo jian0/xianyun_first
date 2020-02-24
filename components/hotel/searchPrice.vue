@@ -89,8 +89,8 @@ export default {
   data() {
     return {
       searcharea: "",
-      startTime: "",
-      endTime: "",
+      startTime:'',
+      endTime: '',
       allperson_num: "",
       person_num: "",
       adult_num: 2,
@@ -108,7 +108,7 @@ export default {
     };
   },
   mounted() {
-    this.searcharea = this.$route.query.cityName;
+      this.searcharea = this.$route.query.cityName;
   },
   methods: {
     //远程搜索的展示
@@ -192,6 +192,7 @@ export default {
       }).then(res=>{
         console.log(res);
         this.$store.commit('hotel/setHotelList',res.data)
+        this.$router.push({path:'hotel',query:{enterTime:this.startTime,leftTime:this.endTime}})
       })
     }
   }
