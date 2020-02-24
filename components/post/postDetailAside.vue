@@ -4,20 +4,14 @@
     <div class="grid-content bg-purple">
       <h4 class="aside-title">相关攻略</h4>
       <div class="recommend-list" v-for="(item,index) in asideData" :key="index">
-        <nuxt-link to="#" class="recommend-item">
+        <nuxt-link :to="`/post/detail?id=${item.id}`" class="recommend-item" @click="handleClick">
           <el-row type="flex">
-            <el-row
-              type="flex"
-              class="post-img"
-              v-for="(img,imgindex) in asideData.images"
-              :key="imgindex"
-            >
-              <img :src="img" alt />
-            </el-row>
-
             <div class="post-text">
+              <div type="flex" class="post-img" v-if="asideData.images">
+                <img :src="`${item.images[0]}`" alt />
+              </div>
               {{item.title}}
-              <p>2020-02-20 11:15 阅读 1</p>
+              <p>{{item.created_at | formatDate}} 阅读 {{item.watch}}</p>
             </div>
           </el-row>
         </nuxt-link>
@@ -27,23 +21,37 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
       asideData: [] //   侧边栏数据
     };
   },
+  filters: {
+    formatDate: function(value) {
+      return moment(value).format("YYYY-MM-DD hh:mm:ss");
+    }
+  },
   mounted() {
-    let id = 4;
-
+    let id = this.$route.query.id;
     // 获取侧边栏详情
     this.$axios({
       url: "/posts/recommend",
       id: id
     }).then(res => {
-      //   console.log(res);
+      console.log(res);
       this.asideData = res.data.data;
     });
+  },
+  methods: {
+    handleClick() {
+      let id = this.$route.query.id;
+      console.log(id);
+
+      this.$emit("handleJump");
+      this.$router.push("/post/detail?id=" + id);
+    }
   }
 };
 </script>

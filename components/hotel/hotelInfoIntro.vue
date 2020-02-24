@@ -1,37 +1,38 @@
   <template>
-  <el-table :data="tableData" style="width: 100%;cursor: pointer;">
-    <el-table-column prop="priceSource" label="价格来源" width="420"></el-table-column>
-    <el-table-column prop="lowPrice" label="低价房型" width="420"></el-table-column>
-    <el-table-column prop="onePrice" label="最低价格/每晚">
-      <div class="cell">
-        <span>￥268</span>
-        起
-        <span>
-          <i class="el-icon-arrow-right"></i>
-        </span>
-      </div>
-    </el-table-column>
-  </el-table>
+  <div>
+    <div v-for="(item,index) in hotelInfoData" :key="index">
+      <el-table :data="item.products" style="width: 100%;cursor: pointer;">
+        <el-table-column prop="name" label="价格来源" width="420"></el-table-column>
+        <el-table-column prop="bestType" label="低价房型" width="420"></el-table-column>
+        <el-table-column prop="price" label="最低价格/每晚" >
+        <template scope="scope">
+          <div class="cell">
+            <span>￥{{scope.row.price}}</span>
+            起
+            <span>
+              <i class="el-icon-arrow-right"></i>
+            </span>
+          </div>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
+  props: ["hotelInfoData"],
   data() {
     return {
-      tableData: [
-        {
-          priceSource: "携程",
-          lowPrice: "高级大床房A",
-          onePrice: 197
-        },
-        {
-          priceSource: "艺龙",
-          lowPrice: "高级大床房A",
-          onePrice: 266
-        }
-      ]
     };
   },
+  methods: {
+    formatter(row, column) {
+      return row.price;
+      console.log(row.price)
+    }
+  }
 };
 </script>
 

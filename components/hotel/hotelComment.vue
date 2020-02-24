@@ -1,21 +1,22 @@
 <template>
   <div class="container">
-    <div class="comment-row">
+    <div class="comment-row" v-for="(item,index) in commentData"
+    :key="index">
       <h4 classs="comments-hd">0条真实用户评论</h4>
       <el-row class="scores-row" type="flex">
         <el-col :span="4">
-          <p>总评数：148</p>
-          <p>好评数：43</p>
-          <p>差评数：5</p>
+          <p>总评数：{{item.all_remarks}}</p>
+          <p>好评数：{{item.good_remarks}}</p>
+          <p>差评数：{{item.bad_remarks}}</p>
         </el-col>
         <el-col :span="5" class="recomment-score">
           <div class="comment-star">
             <el-rate
-              v-model="value"
+              v-model="item.stars"
               disabled
               show-score
               text-color="#ff9900"
-              score-template="{value}"
+             :score-template="`${item.stars}`"
             ></el-rate>
           </div>
           <div class="stamp x-large height-light">推荐</div>
@@ -25,15 +26,16 @@
             <div class="circle-rate">
               <el-progress
                 type="circle"
-                :percentage="70"
+                :percentage="item.scores.environment*10"
                 class="progress"
                 :stroke-width="3"
                 color="#ff9900"
                 :width="70"
+                :show-text='false'
               ></el-progress>
               <span class="text">
                 <span>环境</span>
-                <span>7.4</span>
+                <span>{{item.scores.environment}}</span>
               </span>
             </div>
           </div>
@@ -43,15 +45,16 @@
             <div class="circle-rate">
               <el-progress
                 type="circle"
-                :percentage="70"
+                :percentage="item.scores.product*10"
                 class="progress"
                 :stroke-width="3"
                 color="#ff9900"
                 :width="70"
+                :show-text='false'
               ></el-progress>
               <span class="text">
                 <span>产品</span>
-                <span>7.4</span>
+                <span>{{item.scores.product}}</span>
               </span>
             </div>
           </div>
@@ -61,15 +64,16 @@
             <div class="circle-rate">
               <el-progress
                 type="circle"
-                :percentage="percentage"
+                :percentage="item.scores.service*10"
                 class="progress"
                 :stroke-width="3"
                 color="#ff9900"
                 :width="70"
+                :show-text='false'
               ></el-progress>
               <span class="text">
                 <span>服务</span>
-                <span>7.4</span>
+                <span>{{item.scores.service}}</span>
               </span>
             </div>
           </div>
@@ -81,11 +85,14 @@
 
 <script>
 export default {
+  props:['commentData'],
   data() {
     return {
-      value: 3.7,
-      percentage:0
+  
     };
+  },
+  methods:{
+   
   }
 };
 </script>
